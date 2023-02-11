@@ -7,7 +7,7 @@ import BarchartApp from "./components/global_explanation";
 const DUMMY_BOOKS = [
   {
     id: 0,
-    comic_no: 1,
+    comic_no: 1665,
     book_title: "X-Men",
     year: 1964,
     genre: "Superhero",
@@ -18,7 +18,7 @@ const DUMMY_BOOKS = [
   },
   {
     id: 1,
-    comic_no: 2,
+    comic_no: 637,
     book_title: "BatMan",
     year: 1943,
     genre: "Superhero|Detective",
@@ -29,7 +29,7 @@ const DUMMY_BOOKS = [
   },
   {
     id: 2,
-    comic_no: 3,
+    comic_no: 1661,
     book_title: "Wonder woman",
     year: 1955,
     genre: "Superhero|Action",
@@ -40,7 +40,7 @@ const DUMMY_BOOKS = [
   },
   {
     id: 3,
-    comic_no: 4,
+    comic_no: 1640,
     book_title: "Tin-Tin",
     year: 1922,
     genre: "Adventure|Detective|Action",
@@ -71,39 +71,13 @@ const Book = ({ book, onClick, handleQuerySeedClick }) => {
   }, [book.book_title]);
 
   return (
-    <div
-      // style={{
-      //   border: "1px solid black",
-      //   padding: "10px",
-      //   cursor: "pointer",
-      //   margin: "10px",
-      //   display: "flex",
-      //   flexDirection: "column",
-      //   alignItems: "center",
-      // }}
-      className="book-object"
-      onClick={onClick}
-    >
+    <div className="book-object" onClick={onClick}>
       {image ? <img src={image} alt={book.book_title} /> : null}
       <div>Name: {book.book_title}</div>
       <div>Genre: {book.genre}</div>
       <button onClick={() => handleQuerySeedClick(book)}>
         Query Seed
       </button>{" "}
-      {/* <button
-        style={{ marginTop: "10px" }}
-        onClick={() => {
-          axios
-            .get(
-              `http://localhost:8000/book?b_id=${book.comic_no}&generate_fake_clicks=true`
-            )
-            .then((res) => {
-              console.log(res.data);
-            });
-        }}
-      >
-        Query Seed
-      </button> */}
     </div>
   );
 };
@@ -139,26 +113,66 @@ function MainPage() {
 
   const handleBookClick = (book) => {
     setClickedBook(book);
-    setCurrentWindowClickedBookList([...currentWindowClickedBookList, book]); // add clicked books in current window to list, to be used for machine learning in backend
+    const clicked_book = { ...book };
+    clicked_book.clicked = 1.0;
+    setCurrentWindowClickedBookList([
+      ...currentWindowClickedBookList,
+      clicked_book,
+    ]); // add clicked books in current window to list, to be used for machine learning in backend
   };
 
   const handleQuerySeedClick = (book) => {
     setCurrentQueryBook(book);
-    console.log("clicked comic ", book.comic_no);
-    axios
-      .get(
-        "http://localhost:8000/book?b_id=" +
-          book.comic_no +
-          "&generate_fake_clicks=true"
+
+    // find uninterested books which were not clicked by user
+    var unInterestedBookList = books
+      .filter(
+        ({ comic_no: id1 }) =>
+          !currentWindowClickedBookList.some(({ comic_no: id2 }) => id2 === id1)
       )
+      .map((e) => {
+        e.clicked = 0.0;
+        return e;
+      });
+
+    // remove duplicate clicks
+    var allBookInteractionInfoList = [...currentWindowClickedBookList];
+    var allBookInteractionInfoUniqList = [
+      ...new Map(
+        allBookInteractionInfoList.map((v) => [v.comic_no, v])
+      ).values(),
+    ];
+
+    // add unlicked and clicked books
+    var allBookInteractionInfoJSON = {
+      clicked_book_lst: [
+        ...allBookInteractionInfoUniqList,
+        ...unInterestedBookList,
+      ],
+    };
+    console.log("all interaction info books ", allBookInteractionInfoJSON);
+    axios
+      .post(
+        "http://localhost:8000/book_search?b_id=" +
+          book.comic_no +
+          "&generate_fake_clicks=false",
+        allBookInteractionInfoJSON,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Credentials": true,
+          },
+        }
+      ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
       .then((response) => {
-        console.log(
-          "clicked books in previous window ",
-          currentWindowClickedBookList
-        );
+        // console.log(
+        //   "clicked books in previous window ",
+        //   currentWindowClickedBookList
+        // );
         setCurrentWindowClickedBookList([book]); // clear the current window and set clicked list as query book
-        console.log(response);
-        console.log("current clicked book list ", currentWindowClickedBookList);
+        // console.log(response);
+        // console.log("current clicked book list ", currentWindowClickedBookList);
         setBooks(response.data[0]);
         setFilteredBooks(response.data[0]);
         setGlobalExplanation([globalExplanation[1], response.data[1]]);
@@ -203,13 +217,7 @@ function MainPage() {
               onClick={() => handleBookClick(book)}
               book={book}
               handleQuerySeedClick={handleQuerySeedClick}
-            >
-              {/* <p>{book.book_title}</p>
-              <p>{book.genre}</p>
-              <button onClick={() => handleQuerySeedClick(book)}>
-                Query Seed
-              </button> */}
-            </Book>
+            />
           ))}
       </div>
       <div className="side-bar-container">
