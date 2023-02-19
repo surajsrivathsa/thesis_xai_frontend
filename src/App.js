@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import BarchartApp from "./components/global_explanation";
+import LinechartApp from "./components/local_explanation";
+import SearchContainer from "./components/search_bar";
 
 const DUMMY_BOOKS = [
   {
@@ -51,6 +53,8 @@ const DUMMY_BOOKS = [
   },
 ];
 
+const img_folderpath = "../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
+
 const Book = ({ book, onClick, handleQuerySeedClick }) => {
   const [image, setImage] = useState(null);
 
@@ -67,17 +71,32 @@ const Book = ({ book, onClick, handleQuerySeedClick }) => {
       }
     };
 
-    retrieveImage(book.book_title);
-  }, [book.book_title]);
+    const retrieveImageFromLocal = async (book) => {
+      try {
+        setImage(img_folderpath + "original_" + book.comic_no + "_1.jpeg");
+      } catch (error) {
+        retrieveImage(book);
+        console.error(image, error);
+      }
+    };
+    // console.log("image: ", image);
+    retrieveImageFromLocal(book);
+    // console.log("image: ", image);
+  }, [book]);
 
   return (
-    <div className="book-object" onClick={onClick}>
-      {image ? <img src={image} alt={book.book_title} /> : null}
-      <div>Name: {book.book_title}</div>
-      <div>Genre: {book.genre}</div>
-      <button onClick={() => handleQuerySeedClick(book)}>
-        Query Seed
-      </button>{" "}
+    <div>
+      <div className="book-object" onClick={onClick}>
+        {image ? (
+          <img src={image} alt={book.book_title} className="book-object" />
+        ) : null}
+        <button
+          onClick={() => handleQuerySeedClick(book)}
+          className="query-seed-button"
+        >
+          Query
+        </button>{" "}
+      </div>
     </div>
   );
 };
@@ -105,6 +124,15 @@ function MainPage() {
       panel_ratio: 0.1,
     },
   ]);
+  const [searchBarInput, setSearchBarInput] = useState({
+    typedQuery: "",
+    clickedQuery: {},
+  });
+  const [localExplanation, setLocalExplanation] = useState([
+    [3, 5, 3, 2, 8],
+    [1, 2, 5, 4, 3, 8, 2],
+  ]);
+
   const history = useNavigate();
 
   const handleSearch = (event) => {
@@ -119,6 +147,35 @@ function MainPage() {
       ...currentWindowClickedBookList,
       clicked_book,
     ]); // add clicked books in current window to list, to be used for machine learning in backend
+
+    var localExplanationInfoJSON = {
+      selected_book_lst: [currentQueryBook, clicked_book],
+    };
+    console.log("localExplanationInfoJSON: ", localExplanationInfoJSON);
+
+    axios
+      .post(
+        "http://localhost:8000/local_explanation",
+        localExplanationInfoJSON,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Credentials": true,
+          },
+        }
+      )
+      .then((response) => {
+        console.log("backend response story pace: ", response);
+        setLocalExplanation([
+          response.data.story_pace[0],
+          response.data.story_pace[1],
+        ]);
+        console.log("New Local Explanation: ", localExplanation);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleQuerySeedClick = (book) => {
@@ -181,57 +238,77 @@ function MainPage() {
       .catch((error) => {
         console.log(error);
       });
+
+    // set selected query book as clicked book
+    handleBookClick(book);
+  };
+
+  const ProcessSearchBarInput = (searchBarSelectedData) => {
+    setSearchText(searchBarSelectedData);
+    useEffect(() => {
+      console.log("searchBarSelectedData: ", searchBarInput.clickedQuery);
+    }, [searchBarInput]);
   };
 
   return (
     <div className="app-container">
       <div className="nav-bar">
         <div className="search-container">
-          <input
-            type="text"
-            placeholder="Search for books by name or genre"
-            value={searchValue}
-            onChange={handleSearch}
-          />
+          <SearchContainer getUserInputsFromSearchBar={ProcessSearchBarInput} />
         </div>
       </div>
-      <div className="global-explanation-container">
-        <p>Lorem Ipsum</p>
+
+      {/* 
+        <div className="global-explanation-container">
+        <p>Lorem Ipsum</p> }
         <BarchartApp global_explanations_lst={globalExplanation} />
       </div>
-      <div className="grid-container">
-        {books
-          .filter((book) => {
-            return (
-              book.book_title
-                .toLowerCase()
-                .includes(searchValue.toLowerCase()) ||
-              book.genre.toLowerCase().includes(searchValue.toLowerCase())
-            );
-          })
-          .map((book, index) => (
-            <Book
-              className="book-container"
-              style={{ border: "1px solid black" }}
-              key={index}
-              onClick={() => handleBookClick(book)}
-              book={book}
-              handleQuerySeedClick={handleQuerySeedClick}
-            />
-          ))}
-      </div>
-      <div className="side-bar-container">
-        {currentQueryBook && (
-          <p>
-            Current Query Seed: {currentQueryBook.book_title} -{" "}
-            {currentQueryBook.genre}
-          </p>
-        )}
-        {clickedBook && (
-          <p>
-            Clicked Book: {clickedBook.book_title} - {clickedBook.genre}
-          </p>
-        )}
+      */}
+      <div className="main-screen">
+        <div className="grid-container">
+          {books
+            .filter((book) => {
+              return (
+                book.book_title
+                  .toLowerCase()
+                  .includes(searchValue.toLowerCase()) ||
+                book.genre.toLowerCase().includes(searchValue.toLowerCase())
+              );
+            })
+            .map((book, index) => (
+              <Book
+                className="book-container"
+                style={{ border: "1px solid black" }}
+                key={index}
+                onClick={() => handleBookClick(book)}
+                book={book}
+                handleQuerySeedClick={handleQuerySeedClick}
+              />
+            ))}
+        </div>
+        <div className="side-bar-container">
+          <div>
+            {currentQueryBook && (
+              <p>
+                Current Query Seed: {currentQueryBook.book_title} -{" "}
+                {currentQueryBook.genre}
+              </p>
+            )}
+            {clickedBook && (
+              <p>
+                Clicked Book: {clickedBook.book_title} - {clickedBook.genre}
+              </p>
+            )}
+          </div>
+
+          <div className="global-explanation-container">
+            <BarchartApp global_explanations_lst={globalExplanation} />
+          </div>
+
+          <div className="local-explanation-container">
+            <LinechartApp story_pace={localExplanation} />
+          </div>
+        </div>
       </div>
     </div>
   );

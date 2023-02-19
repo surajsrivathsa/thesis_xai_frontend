@@ -4,7 +4,14 @@ import { Chart as ChartJS } from "chart.js/auto";
 import { Bar } from "react-chartjs-2";
 import "./global_explanation.css";
 
-const labels_lst = ["genre_comb", "gender", "panel_ratio", "supersense"];
+const labels_lst = [
+  "genre_comb",
+  "gender",
+  "panel_ratio",
+  "supersense",
+  "",
+  "",
+];
 
 const DUMMY_EXPLANATION = {
   data: {
@@ -34,6 +41,7 @@ const DUMMY_EXPLANATION = {
 };
 
 function BarchartApp(props) {
+  console.log("global props: ", props);
   var previous_data = [];
   labels_lst.forEach((item) =>
     previous_data.push(props.global_explanations_lst[0][item])
