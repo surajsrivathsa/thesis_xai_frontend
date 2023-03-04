@@ -32,7 +32,7 @@ const DUMMY_LOCAL_EXPLANATION = {
 };
 
 function LinechartApp(props) {
-  console.log("props: ", props);
+  console.log("story pace props: ", props);
   var query_book_story_pace = props.story_pace[0];
   var selected_book_story_pace = props.story_pace[1];
   var max_len = Math.max(
@@ -40,11 +40,11 @@ function LinechartApp(props) {
     selected_book_story_pace.length
   );
   labels_lst = [...Array(max_len).keys()];
-  console.log("previous pace: ", query_book_story_pace);
-  console.log("current pace: ", selected_book_story_pace);
-  const [localExplanation, setLocalExplanation] = useState(
-    DUMMY_LOCAL_EXPLANATION
-  );
+  //console.log("previous pace: ", query_book_story_pace);
+  //console.log("current pace: ", selected_book_story_pace);
+  // const [localExplanation, setLocalExplanation] = useState(
+  //   DUMMY_LOCAL_EXPLANATION
+  // );
   const new_state = {
     data: {
       labels: labels_lst,

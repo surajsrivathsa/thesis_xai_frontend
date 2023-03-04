@@ -5,53 +5,62 @@ import "./App.css";
 import BarchartApp from "./components/global_explanation";
 import LinechartApp from "./components/local_explanation";
 import SearchContainer from "./components/search_bar";
+import { SEARCHBAR_BOOKS, DUMMY_BOOKS } from "./components/constants";
 
-const DUMMY_BOOKS = [
-  {
-    id: 0,
-    comic_no: 1665,
-    book_title: "X-Men",
-    year: 1964,
-    genre: "Superhero",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
-  },
-  {
-    id: 1,
-    comic_no: 637,
-    book_title: "BatMan",
-    year: 1943,
-    genre: "Superhero|Detective",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
-  },
-  {
-    id: 2,
-    comic_no: 1661,
-    book_title: "Wonder woman",
-    year: 1955,
-    genre: "Superhero|Action",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
-  },
-  {
-    id: 3,
-    comic_no: 1640,
-    book_title: "Tin-Tin",
-    year: 1922,
-    genre: "Adventure|Detective|Action",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
-  },
-];
+// const DUMMY_BOOKS = [
+//   {
+//     id: 0,
+//     comic_no: 1665,
+//     book_title: "X-Men",
+//     year: 1964,
+//     genre: "Superhero",
+//     genre_comb: 1.0,
+//     supersense: 1.0,
+//     gender: 1.0,
+//     panel_ratio: 1.0,
+//     comic_cover_img: 1.0,
+//     comic_cover_txt: 1.0,
+//   },
+//   {
+//     id: 1,
+//     comic_no: 637,
+//     book_title: "BatMan",
+//     year: 1943,
+//     genre: "Superhero|Detective",
+//     genre_comb: 1.0,
+//     supersense: 1.0,
+//     gender: 1.0,
+//     panel_ratio: 1.0,
+//     comic_cover_img: 1.0,
+//     comic_cover_txt: 1.0,
+//   },
+//   {
+//     id: 2,
+//     comic_no: 1661,
+//     book_title: "Wonder woman",
+//     year: 1955,
+//     genre: "Superhero|Action",
+//     genre_comb: 1.0,
+//     supersense: 1.0,
+//     gender: 1.0,
+//     panel_ratio: 1.0,
+//     comic_cover_img: 1.0,
+//     comic_cover_txt: 1.0,
+//   },
+//   {
+//     id: 3,
+//     comic_no: 1640,
+//     book_title: "Tin-Tin",
+//     year: 1922,
+//     genre: "Adventure|Detective|Action",
+//     genre_comb: 1.0,
+//     supersense: 1.0,
+//     gender: 1.0,
+//     panel_ratio: 1.0,
+//     comic_cover_img: 1.0,
+//     comic_cover_txt: 1.0,
+//   },
+// ];
 
 const img_folderpath = "../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
@@ -112,16 +121,16 @@ function MainPage() {
   const [searchText, setSearchText] = useState("");
   const [globalExplanation, setGlobalExplanation] = useState([
     {
-      genre_comb: 0.1,
-      supersense: 0.1,
-      gender: 0.1,
-      panel_ratio: 0.1,
+      genre_comb: 1.0,
+      supersense: 1.0,
+      gender: 1.0,
+      panel_ratio: 1.0,
     },
     {
-      genre_comb: 0.1,
-      supersense: 0.1,
-      gender: 0.1,
-      panel_ratio: 0.1,
+      genre_comb: 1.0,
+      supersense: 1.0,
+      gender: 1.0,
+      panel_ratio: 1.0,
     },
   ]);
   const [searchBarInput, setSearchBarInput] = useState({
@@ -131,6 +140,24 @@ function MainPage() {
   const [localExplanation, setLocalExplanation] = useState([
     [3, 5, 3, 2, 8],
     [1, 2, 5, 4, 3, 8, 2],
+    {
+      Who: [""],
+      What: [""],
+      When: [""],
+      Why: [""],
+      Where: [""],
+      How: [""],
+    },
+    {
+      Who: [""],
+      What: [""],
+      When: [""],
+      Why: [""],
+      Where: [""],
+      How: [""],
+    },
+    ["Comic Book Cover"],
+    ["Comic Book Cover"],
   ]);
 
   const history = useNavigate();
@@ -170,6 +197,10 @@ function MainPage() {
         setLocalExplanation([
           response.data.story_pace[0],
           response.data.story_pace[1],
+          response.data.w5_h1_facets[0],
+          response.data.w5_h1_facets[1],
+          response.data.lrp_genre[0],
+          response.data.lrp_genre[1],
         ]);
         console.log("New Local Explanation: ", localExplanation);
       })
@@ -219,6 +250,9 @@ function MainPage() {
             Accept: "application/json",
             "Content-Type": "application/json;charset=UTF-8",
             "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
           },
         }
       ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
@@ -243,11 +277,82 @@ function MainPage() {
     handleBookClick(book);
   };
 
+  const handleSearchBarQueryClick = (clickedQuery) => {
+    var searchBarQuery = { ...clickedQuery };
+    axios
+      .post(
+        "http://localhost:8000/book_search_with_searchbar_inputs",
+        searchBarQuery,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          },
+        }
+      ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
+      .then((response) => {
+        if (searchBarQuery.type === "book") {
+          setCurrentWindowClickedBookList([
+            {
+              id: searchBarQuery.id,
+              comic_no: searchBarQuery.comic_no,
+              book_title: searchBarQuery.book_title,
+              genre: "",
+              year: 1950,
+              genre_comb: 1.0,
+              supersense: 1.0,
+              gender: 1.0,
+              panel_ratio: 1.0,
+            },
+          ]); // clear the current window and set clicked list as query book
+        }
+
+        // console.log(response);
+        // console.log("current clicked book list ", currentWindowClickedBookList);
+        setBooks(response.data[0]);
+        setFilteredBooks(response.data[0]);
+        setGlobalExplanation([globalExplanation[1], response.data[1]]);
+        console.log("New Global Explanation: ", globalExplanation);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+    if (searchBarQuery.type === "book") {
+      // set selected query book as clicked book
+      handleBookClick({
+        id: searchBarQuery.id,
+        comic_no: searchBarQuery.comic_no,
+        book_title: searchBarQuery.book_title,
+        genre: "",
+        year: 1950,
+        genre_comb: 1.0,
+        supersense: 1.0,
+        gender: 1.0,
+        panel_ratio: 1.0,
+      });
+    }
+  };
+
+  useEffect(() => {
+    console.log("useeffect searchBarSelectedData: ", searchBarInput);
+    var queryBook = searchBarInput.clickedQuery;
+    handleSearchBarQueryClick(searchBarInput.clickedQuery);
+  }, [searchBarInput]);
+
+  useEffect(() => {
+    console.log("state has changed unique, initalized states");
+  }, []);
+
   const ProcessSearchBarInput = (searchBarSelectedData) => {
-    setSearchText(searchBarSelectedData);
-    useEffect(() => {
-      console.log("searchBarSelectedData: ", searchBarInput.clickedQuery);
-    }, [searchBarInput]);
+    console.log("received form search bar: ", searchBarInput);
+    setSearchBarInput(searchBarSelectedData);
+
+    console.log("searchBarInput: ", searchBarInput);
   };
 
   return (

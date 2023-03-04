@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./search_bar.css";
 import Combobox from "react-widgets/Combobox";
 import "react-widgets/styles.css";
+import { SEARCHBAR_BOOKS, DUMMY_BOOKS } from "./constants";
 
 const DUMMY_SAMPLE_BOOKS = [
   {
@@ -10,10 +11,10 @@ const DUMMY_SAMPLE_BOOKS = [
     book_title: "X-Men",
     year: 1964,
     genre: "Superhero",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
+    genre_comb: 1.0,
+    supersense: 1.0,
+    gender: 1.0,
+    panel_ratio: 1.0,
     characters: [
       "cyclops",
       "professor x",
@@ -29,10 +30,10 @@ const DUMMY_SAMPLE_BOOKS = [
     book_title: "BatMan",
     year: 1943,
     genre: "Superhero|Detective",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
+    genre_comb: 1.0,
+    supersense: 1.0,
+    gender: 1.0,
+    panel_ratio: 1.0,
     characters: [
       "batman",
       "robin",
@@ -48,10 +49,10 @@ const DUMMY_SAMPLE_BOOKS = [
     book_title: "Wonder woman",
     year: 1955,
     genre: "Superhero|Action",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
+    genre_comb: 1.0,
+    supersense: 1.0,
+    gender: 1.0,
+    panel_ratio: 1.0,
     characters: ["wonderwoman", "hercules", "ares", "british", "john wick"],
   },
   {
@@ -60,54 +61,10 @@ const DUMMY_SAMPLE_BOOKS = [
     book_title: "Tin-Tin",
     year: 1922,
     genre: "Adventure|Detective|Action",
-    genre_comb: 0.1,
-    supersense: 0.1,
-    gender: 0.1,
-    panel_ratio: 0.1,
-    characters: [
-      "tin tin",
-      "professor calculus",
-      "red rackham",
-      "captain haddock",
-      "thompson",
-      "rastapopolous",
-    ],
-  },
-];
-
-const DUMMY_CHARACTERS = [
-  {
-    id: 0,
-    comic_no: 1665,
-    characters: [
-      "cyclops",
-      "professor x",
-      "magneto",
-      "wolverine",
-      "phoenix",
-      "jean gray",
-    ],
-  },
-  {
-    id: 1,
-    comic_no: 637,
-    characters: [
-      "batman",
-      "robin",
-      "harvey dent",
-      "bruce wayne",
-      "joker",
-      "two face",
-    ],
-  },
-  {
-    id: 2,
-    comic_no: 1661,
-    characters: ["wonderwoman", "hercules", "ares", "british", "john wick"],
-  },
-  {
-    id: 3,
-    comic_no: 1640,
+    genre_comb: 1.0,
+    supersense: 1.0,
+    gender: 1.0,
+    panel_ratio: 1.0,
     characters: [
       "tin tin",
       "professor calculus",
@@ -142,7 +99,7 @@ const SearchContainer = (props) => {
     e.preventDefault();
     props.getUserInputsFromSearchBar({
       typedQuery: searchInput.clickedQuery,
-      clickedQuery: searchInput.clickedQuery,
+      clickedQuery: searchInput.clickedSuggestion,
     });
   };
 
@@ -231,7 +188,7 @@ const SearchContainer = (props) => {
     // console.log("e ", e);
     suggestedQueryResults.push(freeTextQueryDict);
 
-    DUMMY_SAMPLE_BOOKS.map((book) => {
+    SEARCHBAR_BOOKS.map((book) => {
       var matchedBookTitleDict = suggestMatchedBookTitle(book, typed_query);
       var matchedBookGenreDict = suggestMatchedBookGenre(book, typed_query);
       var matchedBookCharacterList = suggestMatchedBookCharacter(

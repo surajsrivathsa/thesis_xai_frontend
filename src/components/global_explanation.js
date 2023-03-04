@@ -9,8 +9,8 @@ const labels_lst = [
   "gender",
   "panel_ratio",
   "supersense",
-  "",
-  "",
+  "comic_cover_img",
+  "comic_cover_txt",
 ];
 
 const DUMMY_EXPLANATION = {
@@ -24,7 +24,7 @@ const DUMMY_EXPLANATION = {
         borderWidth: 1,
         hoverBackgroundColor: "rgba(255,99,132,0.4)",
         hoverBorderColor: "rgba(255,99,132,1)",
-        data: [0.1, 0.1, 0.1, 0.1],
+        data: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
       },
 
       {
@@ -34,7 +34,7 @@ const DUMMY_EXPLANATION = {
         borderWidth: 1,
         hoverBackgroundColor: "rgba(255,99,132,0.4)",
         hoverBorderColor: "rgba(255,99,132,1)",
-        data: [0.1, 0.1, 0.1, 0.1],
+        data: [0.1, 0.1, 0.1, 0.1, 0.1, 0.1],
       },
     ],
   },
