@@ -3,7 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./App.css";
 import BarchartApp from "./components/global_explanation";
-import LinechartApp from "./components/local_explanation";
+import {
+  LinechartApp,
+  FacetKeywordsComp,
+} from "./components/local_explanation";
 import SearchContainer from "./components/search_bar";
 import { SEARCHBAR_BOOKS, DUMMY_BOOKS } from "./components/constants";
 
@@ -411,7 +414,12 @@ function MainPage() {
           </div>
 
           <div className="local-explanation-container">
-            <LinechartApp story_pace={localExplanation} />
+            <div>
+              <LinechartApp story_pace={localExplanation} />
+            </div>
+            <div>
+              <FacetKeywordsComp facets={localExplanation} />
+            </div>
           </div>
         </div>
       </div>

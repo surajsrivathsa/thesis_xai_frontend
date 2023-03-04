@@ -31,6 +31,8 @@ const DUMMY_LOCAL_EXPLANATION = {
   },
 };
 
+const FACET_KEYS = ["Who", "What", "When", "Why", "Where", "How"];
+
 function LinechartApp(props) {
   console.log("story pace props: ", props);
   var query_book_story_pace = props.story_pace[0];
@@ -89,4 +91,52 @@ function LinechartApp(props) {
   );
 }
 
-export default LinechartApp;
+function FacetKeywordsComp(props) {
+  var query_book_facets = props.facets[2];
+  var selected_book_facets = props.facets[3];
+  console.log("facet props: ", query_book_facets, selected_book_facets);
+
+  const compareKeywords = (key) => {
+    const query_book_individual_facet = Array.from(
+      query_book_facets[key]
+    ).slice(2);
+    const selected_book_individual_facet = Array.from(
+      selected_book_facets[key]
+    ).slice(2);
+
+    return (
+      query_book_individual_facet &&
+      query_book_individual_facet.filter(
+        (keyword) =>
+          selected_book_individual_facet &&
+          selected_book_individual_facet.includes(keyword)
+      )
+    );
+  };
+
+  return (
+    <div className="facets-container">
+      <h2>Facets Comparison</h2>
+      {FACET_KEYS.map((key) => (
+        <div className="facets-row" key={key}>
+          <div className="facets-key">{key}</div>
+          <div className="facets-values">
+            <div>
+              {query_book_facets[key] &&
+                Array.from(query_book_facets[key]).slice(0, 3).join(", ")}
+            </div>
+            <div>
+              {selected_book_facets[key] &&
+                Array.from(selected_book_facets[key]).slice(0, 3).join(", ")}
+            </div>
+          </div>
+          {/* <div className="facets-shared">
+            {compareKeywords(key) && compareKeywords(key).join(", ")}
+          </div> */}
+        </div>
+      ))}
+    </div>
+  );
+}
+
+export { FacetKeywordsComp, LinechartApp };
