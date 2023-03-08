@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Bar, Line } from "react-chartjs-2";
 import "./local_explanation.css";
+import ChipsArray from "./local_explanation_facets";
 
 var labels_lst = ["query_book", "selected_book"];
 
@@ -115,27 +116,29 @@ function FacetKeywordsComp(props) {
   };
 
   return (
-    <div className="facets-container">
-      <h2>Facets Comparison</h2>
-      {FACET_KEYS.map((key) => (
-        <div className="facets-row" key={key}>
-          <div className="facets-key">{key}</div>
-          <div className="facets-values">
-            <div>
-              {query_book_facets[key] &&
-                Array.from(query_book_facets[key]).slice(0, 3).join(", ")}
-            </div>
-            <div>
-              {selected_book_facets[key] &&
-                Array.from(selected_book_facets[key]).slice(0, 3).join(", ")}
-            </div>
-          </div>
-          {/* <div className="facets-shared">
-            {compareKeywords(key) && compareKeywords(key).join(", ")}
-          </div> */}
-        </div>
-      ))}
-    </div>
+    <ChipsArray facets={props.facets} />
+    //   <div className="facets-container">
+    //     <h2>Facets Comparison</h2>
+    //     {FACET_KEYS.map((key) => (
+    //       <div className="facets-row" key={key}>
+    //         <div className="facets-key">{key}</div>
+    //         <div className="facets-values">
+    //           <div>
+    //             {query_book_facets[key] &&
+    //               Array.from(query_book_facets[key]).slice(0, 3).join(", ")}
+    //           </div>
+    //           <div>
+    //             {selected_book_facets[key] &&
+    //               Array.from(selected_book_facets[key]).slice(0, 3).join(", ")}
+    //           </div>
+    //         </div>
+    //         {/* <div className="facets-shared">
+    //           {compareKeywords(key) && compareKeywords(key).join(", ")}
+    //         </div> */}
+    //       </div>
+    //     ))}
+    //   </div>
+    //
   );
 }
 

@@ -9,6 +9,7 @@ import {
 } from "./components/local_explanation";
 import SearchContainer from "./components/search_bar";
 import { SEARCHBAR_BOOKS, DUMMY_BOOKS } from "./components/constants";
+import GlobalExplanationSliderGrid from "./components/global_explanation_slider";
 
 // const DUMMY_BOOKS = [
 //   {
@@ -128,12 +129,16 @@ function MainPage() {
       supersense: 1.0,
       gender: 1.0,
       panel_ratio: 1.0,
+      comic_cover_img: 1.0,
+      comic_cover_txt: 1.0,
     },
     {
       genre_comb: 1.0,
       supersense: 1.0,
       gender: 1.0,
       panel_ratio: 1.0,
+      comic_cover_img: 1.0,
+      comic_cover_txt: 1.0,
     },
   ]);
   const [searchBarInput, setSearchBarInput] = useState({
@@ -162,6 +167,10 @@ function MainPage() {
     ["Comic Book Cover"],
     ["Comic Book Cover"],
   ]);
+  const [hoveredBook, setHoveredBook] = useState(null);
+  const [interestedBook, setInterestedBook] = useState({});
+  const [currentWindowInterestedBookList, setCurrentWindowInterestedBookList] =
+    useState([]);
 
   const history = useNavigate();
 
@@ -341,6 +350,51 @@ function MainPage() {
     }
   };
 
+  const handleGlobalExplanationSliderSubmit = (data) => {
+    var newGlobalExplanation = [globalExplanation[1], data];
+    setGlobalExplanation(newGlobalExplanation);
+    console.log("User updated global explanation: ", data);
+  };
+
+  /* Hover Functionality start */
+
+  useEffect(() => {
+    let timeoutId;
+
+    if (hoveredBook) {
+      timeoutId = setTimeout(() => {
+        setHoveredBook(hoveredBook);
+        const clicked_book = { ...hoveredBook };
+        hoveredBook.clicked = 1.0;
+        setCurrentWindowClickedBookList((prevSelectedBooks) => {
+          if (prevSelectedBooks.includes(hoveredBook)) {
+            return prevSelectedBooks;
+          }
+          return [...prevSelectedBooks, hoveredBook];
+        });
+
+        var localExplanationInfoJSON = {
+          selected_book_lst: [currentQueryBook, clicked_book],
+        };
+        console.log("localExplanationInfoJSON: ", localExplanationInfoJSON);
+      }, 1000);
+    }
+
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [hoveredBook]);
+
+  function handleBookHover(book) {
+    setHoveredBook(book);
+  }
+
+  function handleBookUnhover(book) {
+    setHoveredBook(null);
+  }
+
+  /* Hover Functionality ends */
+
   useEffect(() => {
     console.log("useeffect searchBarSelectedData: ", searchBarInput);
     var queryBook = searchBarInput.clickedQuery;
@@ -388,9 +442,11 @@ function MainPage() {
                 className="book-container"
                 style={{ border: "1px solid black" }}
                 key={index}
-                onClick={() => handleBookClick(book)}
+                onClick={handleQuerySeedClick} //{() => handleBookClick(book)}
                 book={book}
                 handleQuerySeedClick={handleQuerySeedClick}
+                onMouseEnter={() => handleBookHover(book)}
+                onMouseLeave={() => handleBookUnhover(book)}
               />
             ))}
         </div>
@@ -410,14 +466,18 @@ function MainPage() {
           </div>
 
           <div className="global-explanation-container">
-            <BarchartApp global_explanations_lst={globalExplanation} />
+            {/* <BarchartApp global_explanations_lst={globalExplanation} /> */}
+            <GlobalExplanationSliderGrid
+              inputData={globalExplanation[1]}
+              onSubmit={handleGlobalExplanationSliderSubmit}
+            />
           </div>
 
           <div className="local-explanation-container">
             <div>
               <LinechartApp story_pace={localExplanation} />
             </div>
-            <div>
+            <div className="local-explanation-facets-container">
               <FacetKeywordsComp facets={localExplanation} />
             </div>
           </div>
