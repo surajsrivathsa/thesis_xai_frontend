@@ -1,8 +1,8 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 //import { LastLocationProvider } from "react-router-last-location";
-import LandingPage from "../pages/landingPage/LandingPage";
-import BookGrid from "../pages/bookGrid/BookGrid";
+import LandingPage from "../pages//LandingPage";
+import BookGrid from "../pages/BookGrid";
 
 const AppRoutes = () => {
   return (

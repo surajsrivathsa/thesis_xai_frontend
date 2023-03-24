@@ -1,22 +1,22 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./BookGrid.css";
-import BarchartApp from "../components/global_explanation";
+import "./App.css";
+import BarchartApp from "./components/global_explanation";
 import {
   LinechartApp,
   FacetKeywordsComp,
-} from "../components/local_explanation";
-import SearchContainer from "../components/search_bar";
+} from "./components/local_explanation";
+import SearchContainer from "./components/search_bar";
 import {
   SEARCHBAR_BOOKS,
   DUMMY_BOOKS,
   DEFAULT_LOCAL_EXPLANATION,
   FACET_KEYS,
-} from "../components/constants";
+} from "./components/constants";
 import React, { useState, useRef, useEffect } from "react";
-import { useParams, Link, useLocation } from "react-router-dom";
+import book_card_styles from "./components/book_card.css";
 
-const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
+const img_folderpath = "../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
 const Book = ({ book, onClick, handleQuerySeedClick }) => {
   const [image, setImage] = useState(null);
@@ -87,14 +87,7 @@ const BookCard = ({ book }) => {
   );
 };
 
-function BookGrid(props) {
-  const { state } = useLocation();
-  let books_from_landing_page = null;
-  let { id } = useParams();
-  useEffect(() => {
-    console.log("clicked path: ", `/search/${id}`);
-  }, [id]);
-
+function MainPage() {
   const [searchValue, setSearchValue] = useState("");
   const [books, setBooks] = useState(DUMMY_BOOKS);
   const [currentQueryBook, setCurrentQueryBook] = useState(null);
@@ -129,16 +122,6 @@ function BookGrid(props) {
   const [showOverlay, setShowOverlay] = useState(false);
   const timeoutRef = useRef(null);
   const [hoveredBookList, setHoveredBookList] = useState([]);
-
-  useEffect(() => {
-    books_from_landing_page = state && state.books;
-    setBooks((state) => [...state, ...books_from_landing_page]);
-    console.log(
-      "book recieved for landing page query: ",
-      books_from_landing_page
-    );
-    //state = null;
-  }, [books_from_landing_page]);
 
   const handleMouseEnter = (book) => {
     timeoutRef.current = setTimeout(() => {
@@ -266,65 +249,63 @@ function BookGrid(props) {
   };
 
   const handleSearchBarQueryClick = (clickedQuery) => {
-    if (!clickedQuery) {
-      var searchBarQuery = { ...clickedQuery };
-      axios
-        .post(
-          "http://localhost:8000/book_search_with_searchbar_inputs",
-          searchBarQuery,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json;charset=UTF-8",
-              "Access-Control-Allow-Credentials": true,
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods":
-                "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+    var searchBarQuery = { ...clickedQuery };
+    axios
+      .post(
+        "http://localhost:8000/book_search_with_searchbar_inputs",
+        searchBarQuery,
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          },
+        }
+      ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
+      .then((response) => {
+        if (searchBarQuery.type === "book") {
+          setHoveredBookList([
+            {
+              id: searchBarQuery.id,
+              comic_no: searchBarQuery.comic_no,
+              book_title: searchBarQuery.book_title,
+              genre: "",
+              year: 1950,
+              genre_comb: 1.0,
+              supersense: 1.0,
+              gender: 1.0,
+              panel_ratio: 1.0,
             },
-          }
-        ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
-        .then((response) => {
-          if (searchBarQuery.type === "book") {
-            setHoveredBookList([
-              {
-                id: searchBarQuery.id,
-                comic_no: searchBarQuery.comic_no,
-                book_title: searchBarQuery.book_title,
-                genre: "",
-                year: 1950,
-                genre_comb: 1.0,
-                supersense: 1.0,
-                gender: 1.0,
-                panel_ratio: 1.0,
-              },
-            ]); // clear the current window and set clicked list as query book
-          }
+          ]); // clear the current window and set clicked list as query book
+        }
 
-          // console.log(response);
-          // console.log("current clicked book list ", currentWindowClickedBookList);
-          setBooks(response.data[0]);
-          setFilteredBooks(response.data[0]);
-          setGlobalExplanation([globalExplanation[1], response.data[1]]);
-          console.log("New Global Explanation: ", globalExplanation);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        // console.log(response);
+        // console.log("current clicked book list ", currentWindowClickedBookList);
+        setBooks(response.data[0]);
+        setFilteredBooks(response.data[0]);
+        setGlobalExplanation([globalExplanation[1], response.data[1]]);
+        console.log("New Global Explanation: ", globalExplanation);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
-      if (searchBarQuery.type === "book") {
-        // set selected query book as clicked book
-        setCurrentQueryBook({
-          id: searchBarQuery.id,
-          comic_no: searchBarQuery.comic_no,
-          book_title: searchBarQuery.book_title,
-          genre: "",
-          year: 1950,
-          genre_comb: 1.0,
-          supersense: 1.0,
-          gender: 1.0,
-          panel_ratio: 1.0,
-        });
-      }
+    if (searchBarQuery.type === "book") {
+      // set selected query book as clicked book
+      setCurrentQueryBook({
+        id: searchBarQuery.id,
+        comic_no: searchBarQuery.comic_no,
+        book_title: searchBarQuery.book_title,
+        genre: "",
+        year: 1950,
+        genre_comb: 1.0,
+        supersense: 1.0,
+        gender: 1.0,
+        panel_ratio: 1.0,
+      });
     }
   };
 
@@ -362,57 +343,42 @@ function BookGrid(props) {
       </div>
       <div className="main-screen">
         <div className="book-grid">
-          {books &&
-            books.map((book) => (
-              <Link
+          {books.map((book) => (
+            <div
+              key={book.id}
+              className="book"
+              onMouseEnter={() => handleMouseEnter(book)}
+              onMouseLeave={() => handleMouseLeave()}
+              onClick={() => handleClick(book)}
+              style={
+                currentQueryBook === book.id ? { border: "3px solid blue" } : {}
+              }
+            >
+              <img
                 key={book.id}
-                className="link"
-                to={{ pathname: `/search/${book.comic_no}` }}
-                state={{ book: book }}
-                exact="true"
-              >
-                <div
-                  key={book.id}
-                  className="book"
-                  onMouseEnter={() => handleMouseEnter(book)}
-                  onMouseLeave={() => handleMouseLeave()}
-                  onClick={() => handleClick(book)}
-                  style={
-                    currentQueryBook === book.id
-                      ? { border: "3px solid blue" }
-                      : {}
-                  }
-                >
-                  <img
-                    key={book.id}
-                    src={
-                      img_folderpath + "original_" + book.comic_no + "_1.jpeg"
-                    }
-                    alt={book.book_title}
-                    className="imageLarge"
-                    style={
-                      book.query_book === true
-                        ? { border: "7px solid blue" }
-                        : {}
-                    }
-                  />
-                  {hoveredBook === book && showOverlay && (
-                    <div className="book-overlay">
-                      <p>genre - {book.genre.split("|").join(", ")}</p>
-                      <p>
-                        {FACET_KEYS.map(
-                          (key) =>
-                            Array.from(localExplanation[3][key]) &&
-                            Array.from(localExplanation[3][key])
-                              .slice(0, 2)
-                              .join(", ") + ", "
-                        )}
-                      </p>
-                    </div>
-                  )}
+                src={img_folderpath + "original_" + book.comic_no + "_1.jpeg"}
+                alt={book.book_title}
+                className="imageLarge"
+                style={
+                  book.query_book === true ? { border: "7px solid blue" } : {}
+                }
+              />
+              {hoveredBook === book && showOverlay && (
+                <div className="book-overlay">
+                  <p>genre - {book.genre.split("|").join(", ")}</p>
+                  <p>
+                    {FACET_KEYS.map(
+                      (key) =>
+                        Array.from(localExplanation[3][key]) &&
+                        Array.from(localExplanation[3][key])
+                          .slice(0, 2)
+                          .join(", ") + ", "
+                    )}
+                  </p>
                 </div>
-              </Link>
-            ))}
+              )}
+            </div>
+          ))}
         </div>
         <div className="side-bar-container">
           <div>
@@ -445,4 +411,4 @@ function BookGrid(props) {
   );
 }
 
-export default BookGrid;
+export default MainPage;

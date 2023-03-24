@@ -24127,3 +24127,123 @@ export const DEFAULT_LOCAL_EXPLANATION = [
 ];
 
 export const FACET_KEYS = ["Who", "What", "When", "Why", "Where", "How"];
+
+export const FAMOUS_TITLES_LIST = [
+  {
+    id: 542,
+    comic_no: 542,
+    book_title: "01- Asterix the Gaul",
+    backdrop_path: "../../comic_book_covers_ui/original_542_1.jpeg",
+    genre: "humor",
+  },
+  {
+    id: 525,
+    comic_no: 525,
+    book_title: "Archie 75 Series 001 - Archie (2015) (Digital-Empire)",
+    backdrop_path: "../../comic_book_covers_ui/original_525_1.jpeg",
+    genre: "teen|romance|humor",
+  },
+  {
+    id: 564,
+    comic_no: 542,
+    book_title: "Avengers001",
+    backdrop_path: "../../comic_book_covers_ui/original_564_1.jpeg",
+    genre: "superhero",
+  },
+  {
+    id: 637,
+    comic_no: 637,
+    book_title: "Batman 001",
+    backdrop_path: "../../comic_book_covers_ui/original_637_1.jpeg",
+    genre: "superhero|detective",
+  },
+  {
+    id: 677,
+    comic_no: 677,
+    book_title:
+      "Captain America Comics 001 (1941) (Digital) (AnPymGold-Empire)",
+    backdrop_path: "../../comic_book_covers_ui/original_677_1.jpeg",
+    genre: "superhero",
+  },
+  {
+    id: 864,
+    comic_no: 864,
+    book_title: "Fantastic_Four001",
+    backdrop_path: "../../comic_book_covers_ui/original_864_1.jpeg",
+    genre: "superhero",
+  },
+  {
+    id: 1282,
+    comic_no: 1282,
+    book_title: "Maus 1 - Art Spiegelman",
+    backdrop_path: "../../comic_book_covers_ui/original_1282_1.jpeg",
+    genre: "dark",
+  },
+  {
+    id: 1302,
+    comic_no: 1302,
+    book_title: "01 - Sleep of the Just",
+    backdrop_path: "../../comic_book_covers_ui/original_1302_1.jpeg",
+    genre: "dark fanatasy",
+  },
+];
+
+export const CLASSICS_LIST = [
+  {
+    id: 12,
+    comic_no: 12,
+    book_title: "Brenda Starr - Silver lining in sun valley",
+    backdrop_path: "../../comic_book_covers_ui/original_12_1.jpeg",
+    genre: "detective|female",
+  },
+  {
+    id: 34,
+    comic_no: 34,
+    book_title: "Cowgirl Romances -  Ride Fast for Wyoming",
+    backdrop_path: "../../comic_book_covers_ui/original_34_1.jpeg",
+    genre: "western|romance",
+  },
+  {
+    id: 51,
+    comic_no: 51,
+    book_title: "Crack Western - Mexican Massacare",
+    backdrop_path: "../../comic_book_covers_ui/original_51_1.jpeg",
+    genre: "western|adventure",
+  },
+  {
+    id: 80,
+    comic_no: 80,
+    book_title: "Famous Funnies - 24",
+    backdrop_path: "../../comic_book_covers_ui/original_80_1.jpeg",
+    genre: "humor",
+  },
+  {
+    id: 152,
+    comic_no: 152,
+    book_title: "Jumbo Comics - Sheena - Pantheras of kajoo kazar",
+    backdrop_path: "../../comic_book_covers_ui/original_152_1.jpeg",
+    genre: "humor",
+  },
+  {
+    id: 256,
+    comic_no: 256,
+    book_title: "Manhunt: The Avenging Axe",
+    backdrop_path: "../../comic_book_covers_ui/original_256_1.jpeg",
+    genre: "detective|action",
+  },
+  {
+    id: 477,
+    comic_no: 477,
+    book_title: "Boomerang Blitz: Clipper Kirk",
+    backdrop_path: "../../comic_book_covers_ui/original_477_1.jpeg",
+    genre: "war|aviation|action",
+  },
+];
+
+
+
+export const  delay = (ms) => {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
