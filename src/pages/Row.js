@@ -36,7 +36,17 @@ function Row({ category, bookList, isColumn }) {
           console.log("clicked book from landing page: ", { ...queryBook });
           console.log("searchResults in promise: ", searchResults);
           navigate(`/search/${book.comic_no}`, {
-            state: { books: [...searchResults] },
+            state: {
+              books: [...searchResults],
+              query: {
+                id: queryBook.id,
+                comic_no: queryBook.comic_no,
+                book_title: queryBook.book_title,
+                year: queryBook.year,
+                genre: queryBook.genre,
+                query_book: true,
+              },
+            },
           });
         })
         .catch((error) => {

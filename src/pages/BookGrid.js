@@ -90,6 +90,7 @@ const BookCard = ({ book }) => {
 function BookGrid(props) {
   const { state } = useLocation();
   let books_from_landing_page = null;
+  let q = null;
   let { id } = useParams();
   useEffect(() => {
     console.log("clicked path: ", `/search/${id}`);
@@ -370,13 +371,16 @@ function BookGrid(props) {
 
   // added local storage to persist state on refresh
   useEffect(() => {
-    if (state && state.books) {
+    if (state && state.books && state.query) {
       books_from_landing_page = state && state.books;
+      q = state && state.query;
       console.log(
         "book recieved for landing page query: ",
         books_from_landing_page
       );
       setBooks(() => [...books_from_landing_page]);
+      setCurrentQueryBook(() => q);
+
       // adding results to session storage
       sessionStorage.setItem("books", JSON.stringify(books_from_landing_page));
       sessionStorage.setItem(
@@ -391,10 +395,7 @@ function BookGrid(props) {
         ])
       );
       sessionStorage.setItem("hoveredBookList", JSON.stringify([]));
-      sessionStorage.setItem(
-        "currentQueryBook",
-        JSON.stringify(currentQueryBook)
-      );
+      sessionStorage.setItem("currentQueryBook", JSON.stringify(q));
     } else {
       console.log("page refreshed");
 
@@ -438,6 +439,7 @@ function BookGrid(props) {
     console.log("state has changed unique, initalized states");
   }, []);
 
+  //detect refresh event and alert user
   useEffect(() => {
     window.onbeforeunload = function () {
       console.log(
