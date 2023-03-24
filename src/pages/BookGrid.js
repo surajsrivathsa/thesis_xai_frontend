@@ -130,16 +130,6 @@ function BookGrid(props) {
   const timeoutRef = useRef(null);
   const [hoveredBookList, setHoveredBookList] = useState([]);
 
-  useEffect(() => {
-    books_from_landing_page = state && state.books;
-    setBooks((state) => [...state, ...books_from_landing_page]);
-    console.log(
-      "book recieved for landing page query: ",
-      books_from_landing_page
-    );
-    //state = null;
-  }, [books_from_landing_page]);
-
   const handleMouseEnter = (book) => {
     timeoutRef.current = setTimeout(() => {
       setShowOverlay(true);
@@ -147,7 +137,11 @@ function BookGrid(props) {
       setHoveredBookList((prevList) => [...prevList, book]);
       console.log("hovered book: ", book);
       console.log("hovered book list: ", hoveredBookList.length);
-
+      // get session storage
+      sessionStorage.setItem(
+        "hoveredBookList",
+        JSON.stringify(hoveredBookList)
+      );
       // show local explanations
       var localExplanationInfoJSON = {
         selected_book_lst: [currentQueryBook, book],
@@ -189,12 +183,6 @@ function BookGrid(props) {
     setShowOverlay(false);
     setHoveredBook(null);
     setLocalExplanation(DEFAULT_LOCAL_EXPLANATION);
-  };
-
-  const history = useNavigate();
-
-  const handleSearch = (event) => {
-    setSearchValue(event.target.value);
   };
 
   const handleClick = (book) => {
@@ -258,6 +246,19 @@ function BookGrid(props) {
           setFilteredBooks(response.data[0]);
           setGlobalExplanation([globalExplanation[1], response.data[1]]);
           console.log("New Global Explanation: ", globalExplanation);
+
+          // adding results to session storage
+          sessionStorage.setItem("books", JSON.stringify(response.data[0]));
+          sessionStorage.setItem(
+            "filteredBooks",
+            JSON.stringify(response.data[0])
+          );
+          sessionStorage.setItem(
+            "globalExplanation",
+            JSON.stringify([globalExplanation[1], response.data[1]])
+          );
+          sessionStorage.setItem("hoveredBookList", JSON.stringify([]));
+          sessionStorage.setItem("currentQueryBook", JSON.stringify(book));
         })
         .catch((error) => {
           console.log(error);
@@ -265,9 +266,10 @@ function BookGrid(props) {
     }
   };
 
-  const handleSearchBarQueryClick = (clickedQuery) => {
-    if (!clickedQuery) {
-      var searchBarQuery = { ...clickedQuery };
+  const handleSearchBarQueryClick = (queryBook) => {
+    if (queryBook) {
+      var searchBarQuery = { ...queryBook };
+      console.log("searchBarQuery: ", searchBarQuery);
       axios
         .post(
           "http://localhost:8000/book_search_with_searchbar_inputs",
@@ -284,20 +286,21 @@ function BookGrid(props) {
           }
         ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
         .then((response) => {
+          var defaultHoveredBookList = [
+            {
+              id: searchBarQuery.id,
+              comic_no: searchBarQuery.comic_no,
+              book_title: searchBarQuery.book_title,
+              genre: "",
+              year: 1950,
+              genre_comb: 1.0,
+              supersense: 1.0,
+              gender: 1.0,
+              panel_ratio: 1.0,
+            },
+          ];
           if (searchBarQuery.type === "book") {
-            setHoveredBookList([
-              {
-                id: searchBarQuery.id,
-                comic_no: searchBarQuery.comic_no,
-                book_title: searchBarQuery.book_title,
-                genre: "",
-                year: 1950,
-                genre_comb: 1.0,
-                supersense: 1.0,
-                gender: 1.0,
-                panel_ratio: 1.0,
-              },
-            ]); // clear the current window and set clicked list as query book
+            setHoveredBookList(defaultHoveredBookList); // clear the current window and set clicked list as query book
           }
 
           // console.log(response);
@@ -306,6 +309,36 @@ function BookGrid(props) {
           setFilteredBooks(response.data[0]);
           setGlobalExplanation([globalExplanation[1], response.data[1]]);
           console.log("New Global Explanation: ", globalExplanation);
+          console.log("search results for searchbar input: ", response.data[0]);
+
+          // adding results to session storage
+          sessionStorage.setItem("books", JSON.stringify(response.data[0]));
+          sessionStorage.setItem(
+            "filteredBooks",
+            JSON.stringify(response.data[0])
+          );
+          sessionStorage.setItem(
+            "globalExplanation",
+            JSON.stringify([globalExplanation[1], response.data[1]])
+          );
+          sessionStorage.setItem(
+            "hoveredBookList",
+            JSON.stringify(defaultHoveredBookList)
+          );
+          sessionStorage.setItem(
+            "currentQueryBook",
+            JSON.stringify({
+              id: searchBarQuery.id,
+              comic_no: searchBarQuery.comic_no,
+              book_title: searchBarQuery.book_title,
+              genre: "",
+              year: 1950,
+              genre_comb: 1.0,
+              supersense: 1.0,
+              gender: 1.0,
+              panel_ratio: 1.0,
+            })
+          );
         })
         .catch((error) => {
           console.log(error);
@@ -328,16 +361,6 @@ function BookGrid(props) {
     }
   };
 
-  useEffect(() => {
-    console.log("useeffect searchBarSelectedData: ", searchBarInput);
-    var queryBook = searchBarInput.clickedQuery;
-    handleSearchBarQueryClick(searchBarInput.clickedQuery);
-  }, [searchBarInput]);
-
-  useEffect(() => {
-    console.log("state has changed unique, initalized states");
-  }, []);
-
   const ProcessSearchBarInput = (searchBarSelectedData) => {
     console.log("received form search bar: ", searchBarInput);
     setSearchBarInput(searchBarSelectedData);
@@ -345,13 +368,90 @@ function BookGrid(props) {
     console.log("searchBarInput: ", searchBarInput);
   };
 
-  const retrieveImageFromLocal = async (book) => {
-    try {
-      return img_folderpath + "original_" + book.comic_no + "_1.jpeg";
-    } catch (error) {
-      console.error(book, error);
+  // added local storage to persist state on refresh
+  useEffect(() => {
+    if (state && state.books) {
+      books_from_landing_page = state && state.books;
+      console.log(
+        "book recieved for landing page query: ",
+        books_from_landing_page
+      );
+      setBooks(() => [...books_from_landing_page]);
+      // adding results to session storage
+      sessionStorage.setItem("books", JSON.stringify(books_from_landing_page));
+      sessionStorage.setItem(
+        "filteredBooks",
+        JSON.stringify(books_from_landing_page)
+      );
+      sessionStorage.setItem(
+        "globalExplanation",
+        JSON.stringify([
+          globalExplanation[1],
+          { genre_comb: 1.0, supersense: 1.0, gender: 1.0, panel_ratio: 1.0 },
+        ])
+      );
+      sessionStorage.setItem("hoveredBookList", JSON.stringify([]));
+      sessionStorage.setItem(
+        "currentQueryBook",
+        JSON.stringify(currentQueryBook)
+      );
+    } else {
+      console.log("page refreshed");
+
+      // get values from session storage
+      //setBooks(() => [...books]);
+      setBooks(() => [...JSON.parse(sessionStorage.getItem("books"))]);
+      setHoveredBookList(() => [
+        ...JSON.parse(sessionStorage.getItem("hoveredBookList")),
+      ]);
+      setFilteredBooks(() => [
+        ...JSON.parse(sessionStorage.getItem("filteredBooks")),
+      ]);
+      setCurrentQueryBook(() =>
+        JSON.parse(sessionStorage.getItem("currentQueryBook"))
+      );
+      setGlobalExplanation(() =>
+        JSON.parse(sessionStorage.getItem("globalExplanation"))
+      );
+      setSearchBarInput(() =>
+        JSON.parse(sessionStorage.getItem("searchBarInput"))
+      );
+      console.log("states refreshed");
     }
-  };
+    // state = null;
+  }, []);
+
+  useEffect(() => {
+    if (
+      searchBarInput &&
+      searchBarInput.typedQuery &&
+      searchBarInput.clickedQuery
+    ) {
+      console.log("useeffect searchBarSelectedData: ", searchBarInput);
+      var queryBook = searchBarInput.clickedQuery;
+      handleSearchBarQueryClick(queryBook);
+      console.log("state of books: ", books);
+    }
+  }, [searchBarInput]);
+
+  useEffect(() => {
+    console.log("state has changed unique, initalized states");
+  }, []);
+
+  useEffect(() => {
+    window.onbeforeunload = function () {
+      console.log(
+        "detected page refresh, initiaalizing states from session storage"
+      );
+
+      return true;
+    };
+
+    return () => {
+      console.log("window null settign");
+      window.onbeforeunload = null;
+    };
+  }, []);
 
   return (
     <div className="app-container">

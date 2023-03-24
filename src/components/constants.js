@@ -24058,7 +24058,6 @@ export const DUMMY_BOOKS = [
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
   },
-  ,
   {
     id: 1,
     comic_no: 637,
@@ -24072,7 +24071,6 @@ export const DUMMY_BOOKS = [
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
   },
-  ,
   {
     id: 2,
     comic_no: 1661,
@@ -24086,7 +24084,7 @@ export const DUMMY_BOOKS = [
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
   },
-  ,
+
   {
     id: 3,
     comic_no: 1640,
@@ -24100,7 +24098,6 @@ export const DUMMY_BOOKS = [
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
   },
-  ,
 ];
 
 export const DEFAULT_LOCAL_EXPLANATION = [
@@ -24240,10 +24237,8 @@ export const CLASSICS_LIST = [
   },
 ];
 
-
-
-export const  delay = (ms) => {
+export const delay = (ms) => {
   return new Promise((resolve) => {
     setTimeout(resolve, ms);
   });
-}
+};
