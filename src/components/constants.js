@@ -24102,3 +24102,28 @@ export const DUMMY_BOOKS = [
   },
   ,
 ];
+
+export const DEFAULT_LOCAL_EXPLANATION = [
+  [0],
+  [0],
+  {
+    Who: [""],
+    What: [""],
+    When: [""],
+    Why: [""],
+    Where: [""],
+    How: [""],
+  },
+  {
+    Who: [""],
+    What: [""],
+    When: [""],
+    Why: [""],
+    Where: [""],
+    How: [""],
+  },
+  [""],
+  [""],
+];
+
+export const FACET_KEYS = ["Who", "What", "When", "Why", "Where", "How"];
