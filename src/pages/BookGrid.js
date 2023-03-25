@@ -15,6 +15,7 @@ import {
 } from "../components/constants";
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
+import GlobalExplanationSliderGrid from "../components/global_explanation_slider";
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
@@ -369,6 +370,13 @@ function BookGrid(props) {
     console.log("searchBarInput: ", searchBarInput);
   };
 
+  // handle users changes on slider
+  const handleGlobalExplanationSliderSubmit = (data) => {
+    var newGlobalExplanation = [globalExplanation[1], data];
+    setGlobalExplanation(newGlobalExplanation);
+    console.log("User updated global explanation: ", data);
+  };
+
   // added local storage to persist state on refresh
   useEffect(() => {
     if (state && state.books && state.query) {
@@ -531,8 +539,16 @@ function BookGrid(props) {
             )}
           </div>
 
-          <div className="global-explanation-container">
+          {/* <div className="global-explanation-container">
             <BarchartApp global_explanations_lst={globalExplanation} />
+          </div> */}
+
+          <div className="global-explanation-container">
+            {/* <BarchartApp global_explanations_lst={globalExplanation} /> */}
+            <GlobalExplanationSliderGrid
+              inputData={globalExplanation[1]}
+              onSubmit={handleGlobalExplanationSliderSubmit}
+            />
           </div>
 
           <div className="local-explanation-container">
