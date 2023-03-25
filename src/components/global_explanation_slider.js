@@ -72,11 +72,12 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
   };
 
   const columns = [
-    { field: "key", headerName: "Key", width: 200 },
+    { field: "key", headerName: "Facet", width: 150 },
     {
       field: "value",
-      headerName: "Value",
-      width: 150,
+      headerName: "Contribution towards Search",
+      width: 220,
+      editable: true,
       renderCell: (params) => (
         <Slider
           min={0}
@@ -84,7 +85,13 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
           step={0.1}
           value={data[params.row.key]}
           onChange={(event, value) => handleSliderChange(params.row.key, value)}
-          sx={{ width: "80%" }}
+          sx={{
+            width: "80%",
+            "& .MuiSlider-thumb": { color: "gray" },
+            "& .MuiSlider-track": { color: "gray" },
+            "& .MuiSlider-rail": { color: "#acc4e4" },
+            "& .MuiSlider-active": { color: "green" },
+          }}
         />
       ),
     },
