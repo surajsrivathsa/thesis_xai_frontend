@@ -16,77 +16,10 @@ import {
 import React, { useState, useRef, useEffect } from "react";
 import { useParams, Link, useLocation } from "react-router-dom";
 import GlobalExplanationSliderGrid from "../components/global_explanation_slider";
+import FetchSearchResultsforSearchbarQuery from "../backend_api_calls/FetchSearchResultsforSearchbarQuery";
+import FetchSearchResultsForBookGrid from "../backend_api_calls/FetchSearchResultsForBookGrid";
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
-
-const Book = ({ book, onClick, handleQuerySeedClick }) => {
-  const [image, setImage] = useState(null);
-
-  useEffect(() => {
-    const retrieveImage = async (book) => {
-      try {
-        const response = await axios.get(
-          `https://api.unsplash.com/search/photos?query=${book.book_title}&client_id=CGhIP6DeLSlR_gRf5_RBQdxTQOzV_tzZOC0A95KFcFU`
-        );
-        const imageUrl = response.data.results[0].urls.regular;
-        setImage(imageUrl);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-
-    const retrieveImageFromLocal = async (book) => {
-      try {
-        setImage(img_folderpath + "original_" + book.comic_no + "_1.jpeg");
-      } catch (error) {
-        retrieveImage(book);
-        console.error(image, error);
-      }
-    };
-    // console.log("image: ", image);
-    retrieveImageFromLocal(book);
-    // console.log("image: ", image);
-  }, [book]);
-
-  return (
-    <div>
-      <div className="book-object" onClick={onClick}>
-        {image ? (
-          <img src={image} alt={book.book_title} className="book-object" />
-        ) : null}
-        <button
-          onClick={() => handleQuerySeedClick(book)}
-          className="query-seed-button"
-        >
-          Query
-        </button>{" "}
-      </div>
-    </div>
-  );
-};
-
-const BookCard = ({ book }) => {
-  // image state
-  const [image, setImage] = useState(null);
-
-  // set image
-  useEffect(() => {
-    const retrieveImageFromLocal = async (book) => {
-      try {
-        setImage(img_folderpath + "original_" + book.comic_no + "_1.jpeg");
-      } catch (error) {
-        console.error(image, error);
-      }
-    };
-    retrieveImageFromLocal(book);
-  }, [book]);
-
-  return (
-    <div key={book.comic_no}>
-      {image ? <img src={image} alt={book.book_title} /> : null}
-    </div>
-  );
-};
 
 function BookGrid(props) {
   const { state } = useLocation();
@@ -108,12 +41,16 @@ function BookGrid(props) {
       supersense: 1.0,
       gender: 1.0,
       panel_ratio: 1.0,
+      comic_cover_img: 1.0,
+      comic_cover_txt: 1.0,
     },
     {
       genre_comb: 1.0,
       supersense: 1.0,
       gender: 1.0,
       panel_ratio: 1.0,
+      comic_cover_img: 1.0,
+      comic_cover_txt: 1.0,
     },
   ]);
   const [searchBarInput, setSearchBarInput] = useState({
@@ -131,6 +68,7 @@ function BookGrid(props) {
   const [showOverlay, setShowOverlay] = useState(false);
   const timeoutRef = useRef(null);
   const [hoveredBookList, setHoveredBookList] = useState([]);
+  const [isEditable, setIsEditable] = useState(false);
 
   const handleMouseEnter = (book) => {
     timeoutRef.current = setTimeout(() => {
@@ -225,46 +163,42 @@ function BookGrid(props) {
         ],
       };
       console.log("all interaction info books ", allBookInteractionInfoJSON);
-      axios
-        .post(
-          "http://localhost:8000/book_search?b_id=" +
-            book.comic_no +
-            "&generate_fake_clicks=false",
-          allBookInteractionInfoJSON,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json;charset=UTF-8",
-              "Access-Control-Allow-Credentials": true,
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods":
-                "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-            },
-          }
-        ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
-        .then((response) => {
-          setHoveredBookList([]); // clear the current window and set clicked list as query book
-          setBooks(response.data[0]);
-          setFilteredBooks(response.data[0]);
-          setGlobalExplanation([globalExplanation[1], response.data[1]]);
-          console.log("New Global Explanation: ", globalExplanation);
+      try {
+        let fetchSearchResultsforBookGridPromise =
+          FetchSearchResultsForBookGrid(
+            book.comic_no,
+            isEditable,
+            allBookInteractionInfoJSON,
+            globalExplanation[1]
+          );
+        fetchSearchResultsforBookGridPromise
+          .then((response) => {
+            setHoveredBookList([]); // clear the current window and set clicked list as query book
+            setBooks(response.data[0]);
+            setFilteredBooks(response.data[0]);
+            setGlobalExplanation([globalExplanation[1], response.data[1]]);
+            console.log("New Global Explanation: ", globalExplanation);
 
-          // adding results to session storage
-          sessionStorage.setItem("books", JSON.stringify(response.data[0]));
-          sessionStorage.setItem(
-            "filteredBooks",
-            JSON.stringify(response.data[0])
-          );
-          sessionStorage.setItem(
-            "globalExplanation",
-            JSON.stringify([globalExplanation[1], response.data[1]])
-          );
-          sessionStorage.setItem("hoveredBookList", JSON.stringify([]));
-          sessionStorage.setItem("currentQueryBook", JSON.stringify(book));
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+            // adding results to session storage
+            sessionStorage.setItem("books", JSON.stringify(response.data[0]));
+            sessionStorage.setItem(
+              "filteredBooks",
+              JSON.stringify(response.data[0])
+            );
+            sessionStorage.setItem(
+              "globalExplanation",
+              JSON.stringify([globalExplanation[1], response.data[1]])
+            );
+            sessionStorage.setItem("hoveredBookList", JSON.stringify([]));
+            sessionStorage.setItem("currentQueryBook", JSON.stringify(book));
+          })
+          .catch((error) => {
+            throw error;
+          });
+      } catch (error) {
+        // handle rejected Promise/error/etc...
+        console.log("error during navigation: ", error);
+      }
     }
   };
 
@@ -272,94 +206,101 @@ function BookGrid(props) {
     if (queryBook) {
       var searchBarQuery = { ...queryBook };
       console.log("searchBarQuery: ", searchBarQuery);
-      axios
-        .post(
-          "http://localhost:8000/book_search_with_searchbar_inputs",
-          searchBarQuery,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json;charset=UTF-8",
-              "Access-Control-Allow-Credentials": true,
-              "Access-Control-Allow-Origin": "*",
-              "Access-Control-Allow-Methods":
-                "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-            },
-          }
-        ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
-        .then((response) => {
-          var defaultHoveredBookList = [
-            {
-              id: searchBarQuery.id,
-              comic_no: searchBarQuery.comic_no,
-              book_title: searchBarQuery.book_title,
-              genre: "",
-              year: 1950,
-              genre_comb: 1.0,
-              supersense: 1.0,
-              gender: 1.0,
-              panel_ratio: 1.0,
-            },
-          ];
-          if (searchBarQuery.type === "book") {
-            setHoveredBookList(defaultHoveredBookList); // clear the current window and set clicked list as query book
-          }
+      try {
+        let fetchSearchResultsforSearchBarPromise =
+          FetchSearchResultsforSearchbarQuery(
+            { clickedBook: { ...queryBook } },
+            isEditable,
+            globalExplanation[1]
+          );
 
-          // console.log(response);
-          // console.log("current clicked book list ", currentWindowClickedBookList);
-          setBooks(response.data[0]);
-          setFilteredBooks(response.data[0]);
-          setGlobalExplanation([globalExplanation[1], response.data[1]]);
-          console.log("New Global Explanation: ", globalExplanation);
-          console.log("search results for searchbar input: ", response.data[0]);
+        fetchSearchResultsforSearchBarPromise
+          .then((response) => {
+            var defaultHoveredBookList = [
+              {
+                id: searchBarQuery.id,
+                comic_no: searchBarQuery.comic_no,
+                book_title: searchBarQuery.book_title,
+                genre: "",
+                year: 1950,
+                genre_comb: 1.0,
+                supersense: 1.0,
+                gender: 1.0,
+                panel_ratio: 1.0,
+                comic_cover_img: 1.0,
+                comic_cover_txt: 1.0,
+              },
+            ];
+            if (searchBarQuery.type === "book") {
+              setHoveredBookList(defaultHoveredBookList); // clear the current window and set clicked list as query book
+            }
 
-          // adding results to session storage
-          sessionStorage.setItem("books", JSON.stringify(response.data[0]));
-          sessionStorage.setItem(
-            "filteredBooks",
-            JSON.stringify(response.data[0])
-          );
-          sessionStorage.setItem(
-            "globalExplanation",
-            JSON.stringify([globalExplanation[1], response.data[1]])
-          );
-          sessionStorage.setItem(
-            "hoveredBookList",
-            JSON.stringify(defaultHoveredBookList)
-          );
-          sessionStorage.setItem(
-            "currentQueryBook",
-            JSON.stringify({
-              id: searchBarQuery.id,
-              comic_no: searchBarQuery.comic_no,
-              book_title: searchBarQuery.book_title,
-              genre: "",
-              year: 1950,
-              genre_comb: 1.0,
-              supersense: 1.0,
-              gender: 1.0,
-              panel_ratio: 1.0,
-            })
-          );
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+            // console.log(response);
+            // console.log("current clicked book list ", currentWindowClickedBookList);
+            setBooks(response.data[0]);
+            setFilteredBooks(response.data[0]);
+            setGlobalExplanation([globalExplanation[1], response.data[1]]);
+            console.log("New Global Explanation: ", globalExplanation);
+            console.log(
+              "search results for searchbar input: ",
+              response.data[0]
+            );
 
-      if (searchBarQuery.type === "book") {
-        // set selected query book as clicked book
-        setCurrentQueryBook({
-          id: searchBarQuery.id,
-          comic_no: searchBarQuery.comic_no,
-          book_title: searchBarQuery.book_title,
-          genre: "",
-          year: 1950,
-          genre_comb: 1.0,
-          supersense: 1.0,
-          gender: 1.0,
-          panel_ratio: 1.0,
-        });
+            // adding results to session storage
+            sessionStorage.setItem("books", JSON.stringify(response.data[0]));
+            sessionStorage.setItem(
+              "filteredBooks",
+              JSON.stringify(response.data[0])
+            );
+            sessionStorage.setItem(
+              "globalExplanation",
+              JSON.stringify([globalExplanation[1], response.data[1]])
+            );
+            sessionStorage.setItem(
+              "hoveredBookList",
+              JSON.stringify(defaultHoveredBookList)
+            );
+            sessionStorage.setItem(
+              "currentQueryBook",
+              JSON.stringify({
+                id: searchBarQuery.id,
+                comic_no: searchBarQuery.comic_no,
+                book_title: searchBarQuery.book_title,
+                genre: "",
+                year: 1950,
+                genre_comb: 1.0,
+                supersense: 1.0,
+                gender: 1.0,
+                panel_ratio: 1.0,
+                comic_cover_img: 1.0,
+                comic_cover_txt: 1.0,
+              })
+            );
+          })
+          .catch((error) => {
+            throw error;
+          });
+      } catch (error) {
+        // handle rejected Promise/error/etc...
+        console.log("error during navigation: ", error);
       }
+    }
+
+    if (searchBarQuery.type === "book") {
+      // set selected query book as clicked book
+      setCurrentQueryBook({
+        id: searchBarQuery.id,
+        comic_no: searchBarQuery.comic_no,
+        book_title: searchBarQuery.book_title,
+        genre: "",
+        year: 1950,
+        genre_comb: 1.0,
+        supersense: 1.0,
+        gender: 1.0,
+        panel_ratio: 1.0,
+        comic_cover_img: 1.0,
+        comic_cover_txt: 1.0,
+      });
     }
   };
 
@@ -372,9 +313,23 @@ function BookGrid(props) {
 
   // handle users changes on slider
   const handleGlobalExplanationSliderSubmit = (data) => {
-    var newGlobalExplanation = [globalExplanation[1], data];
-    setGlobalExplanation(newGlobalExplanation);
-    console.log("User updated global explanation: ", data);
+    if (data.isEditable === true) {
+      var newGlobalExplanation = [
+        globalExplanation[1],
+        data.userChosenFacetWeights,
+      ];
+
+      // set state of global explnanation to user provided and set editable flag
+      setGlobalExplanation(newGlobalExplanation);
+      setIsEditable(data.isEditable);
+      sessionStorage.setItem(
+        "globalExplanation",
+        JSON.stringify([globalExplanation[1], data.userChosenFacetWeights])
+      );
+      console.log("User updated global explanation: ", data);
+    } else {
+      setIsEditable(data.isEditable);
+    }
   };
 
   // added local storage to persist state on refresh
@@ -399,7 +354,14 @@ function BookGrid(props) {
         "globalExplanation",
         JSON.stringify([
           globalExplanation[1],
-          { genre_comb: 1.0, supersense: 1.0, gender: 1.0, panel_ratio: 1.0 },
+          {
+            genre_comb: 1.0,
+            supersense: 1.0,
+            gender: 1.0,
+            panel_ratio: 1.0,
+            comic_cover_img: 1.0,
+            comic_cover_txt: 1.0,
+          },
         ])
       );
       sessionStorage.setItem("hoveredBookList", JSON.stringify([]));

@@ -6,21 +6,36 @@ import {
   FACET_KEYS,
 } from "../components/constants";
 
-function FetchSearchResultsforSearchbarQuery(
-  clickedQuery,
-  isEditable,
+function FetchSearchResultsforBookGrid(
+  comic_no,
+  generate_fake_clicks,
+  allBookInteractionInfoJSON,
   userFacetWeights
 ) {
-  var searchBarQuery = { ...clickedQuery.clickedBook };
-  console.log("clicked query inside fetch: ", searchBarQuery);
+  console.log(
+    "input parameters: ",
+    comic_no,
+    generate_fake_clicks,
+    allBookInteractionInfoJSON,
+    userFacetWeights
+  );
+  console.log(
+    "possible link : http://localhost:8000/book_search?b_id=" +
+      comic_no +
+      "&generate_fake_clicks=" +
+      generate_fake_clicks
+  );
+  console.log("here");
   var searchResults = DUMMY_BOOKS;
   return new Promise((resolve, reject) => {
     axios
       .post(
-        "http://localhost:8000/book_search_with_searchbar_inputs",
+        "http://localhost:8000/book_search?b_id=" +
+          parseInt(comic_no) +
+          "&generate_fake_clicks=" +
+          generate_fake_clicks,
         {
-          searchbar_query: searchBarQuery,
-          generate_fake_clicks: isEditable,
+          cbl: allBookInteractionInfoJSON,
           input_feature_importance_dict: userFacetWeights,
         },
         {
@@ -46,4 +61,4 @@ function FetchSearchResultsforSearchbarQuery(
   });
 }
 
-export default FetchSearchResultsforSearchbarQuery;
+export default FetchSearchResultsforBookGrid;

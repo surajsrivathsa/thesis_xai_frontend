@@ -26,13 +26,27 @@ function Row({ category, bookList, isColumn }) {
       text: queryBook.text,
       type: queryBook.type,
     };
+
+    // default all facet weights to one
+    let isEditable = true;
+    let userFacetWeights = {
+      genre_comb: 1.0,
+      supersense: 1.0,
+      gender: 1.0,
+      panel_ratio: 1.0,
+      comic_cover_img: 1.0,
+      comic_cover_txt: 1.0,
+    };
     try {
       let fetchSearchPromise = FetchSearchResultsforSearchbarQuery({
         clickedBook: { ...queryBook },
+        isEditable,
+        userFacetWeights,
       });
 
       fetchSearchPromise
-        .then((searchResults) => {
+        .then((response) => {
+          let searchResults = response.data[0];
           console.log("clicked book from landing page: ", { ...queryBook });
           console.log("searchResults in promise: ", searchResults);
           navigate(`/search/${book.comic_no}`, {
