@@ -36,7 +36,8 @@ function FetchSearchResultsforSearchbarQuery(
       ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
       .then((response) => {
         searchResults = [...response.data[0]];
-        console.log("response from api: ", searchResults);
+        console.log("response SERP from api: ", searchResults);
+        console.log("all response: ", response);
         resolve(response);
       })
       .catch((error) => {

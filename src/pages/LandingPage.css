@@ -1,0 +1,15 @@
+.langing-page{
+    display: flex;
+  position:relative;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: left;
+  padding-top: 1%; /* Adjust as needed */
+  width: auto;
+  height: auto;
+  
+  margin-left: 1%;
+  margin-bottom: 1%;
+  background-color: white;
+  margin-top: 5%;
+}

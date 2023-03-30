@@ -43,7 +43,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
   // update editable switch and color of sliders
   const handleSwitchChange = (event) => {
     console.log(event);
-    setIsEditable(event.target.checked);
+    setIsEditable((checked) => event.target.checked);
     if (event.target.checked) {
       setSliderSX({
         width: "80%",
@@ -53,10 +53,10 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
         "& .MuiSlider-active": { color: "green" },
       });
 
-      // onSubmit({
-      //   isEditable: event.target.checked,
-      //   userChosenFacetWeights: data,
-      // });
+      onSubmit({
+        isEditable: event.target.checked,
+        userChosenFacetWeights: data,
+      });
     } else {
       setSliderSX({
         width: "80%",
@@ -65,18 +65,18 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
         "& .MuiSlider-rail": { color: "#acc4e4" },
         "& .MuiSlider-active": { color: "green" },
       });
-      // console.log("submitted default data from global slider: ", data);
-      // onSubmit({
-      //   isEditable: event.target.checked,
-      //   userChosenFacetWeights: {
-      //     genre_comb: 1.0,
-      //     gender: 1.0,
-      //     panel_ratio: 1.0,
-      //     supersense: 1.0,
-      //     comic_cover_img: 1.0,
-      //     comic_cover_txt: 1.0,
-      //   },
-      // });
+      console.log("submitted default data from global slider: ", data);
+      onSubmit({
+        isEditable: event.target.checked,
+        userChosenFacetWeights: {
+          genre_comb: 1.0,
+          gender: 1.0,
+          panel_ratio: 1.0,
+          supersense: 1.0,
+          comic_cover_img: 1.0,
+          comic_cover_txt: 1.0,
+        },
+      });
     }
   };
 

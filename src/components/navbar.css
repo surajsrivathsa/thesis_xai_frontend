@@ -1,0 +1,30 @@
+.nav-bar {
+  position: absolute;
+  width: 74%;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  background-color: white;
+  padding: 10px;
+  height: 10%;
+
+}
+
+.search-container {
+  display: content;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  width: 70%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.search-container input {
+  width: 100%;
+  border:solid black 2px;
+  border-style: groove;
+}

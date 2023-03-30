@@ -18,8 +18,25 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import GlobalExplanationSliderGrid from "../components/global_explanation_slider";
 import FetchSearchResultsforSearchbarQuery from "../backend_api_calls/FetchSearchResultsforSearchbarQuery";
 import FetchSearchResultsForBookGrid from "../backend_api_calls/FetchSearchResultsForBookGrid";
+import ChipsArray from "../components/global_explanation_relevance_feedback";
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
+
+const initial_chips = ["No Themes Found"];
+
+function HomeLogo() {
+  return (
+    <div className="home-logo">
+      <Link to="/">
+        <img
+          src="../../logo192.png"
+          alt="Home"
+          style={{ height: "50px", width: "50px" }}
+        />
+      </Link>
+    </div>
+  );
+}
 
 function BookGrid(props) {
   const { state } = useLocation();
@@ -69,6 +86,8 @@ function BookGrid(props) {
   const timeoutRef = useRef(null);
   const [hoveredBookList, setHoveredBookList] = useState([]);
   const [isEditable, setIsEditable] = useState(false);
+  const [relevanceFeedbackExplanation, setRelevanceFeedbackExplanation] =
+    useState(initial_chips);
 
   const handleMouseEnter = (book) => {
     timeoutRef.current = setTimeout(() => {
@@ -84,7 +103,7 @@ function BookGrid(props) {
       );
       // show local explanations
       var localExplanationInfoJSON = {
-        selected_book_lst: [currentQueryBook, book],
+        selected_book_lst: [{ ...currentQueryBook, query_book: true }, book],
       };
       console.log("localExplanationInfoJSON: ", localExplanationInfoJSON);
 
@@ -177,7 +196,14 @@ function BookGrid(props) {
             setBooks(response.data[0]);
             setFilteredBooks(response.data[0]);
             setGlobalExplanation([globalExplanation[1], response.data[1]]);
+            setRelevanceFeedbackExplanation(
+              response.data[2].relevance_feedback_explanation
+            );
             console.log("New Global Explanation: ", globalExplanation);
+            console.log(
+              "relevance feedback explanation: ",
+              response.data[2].relevance_feedback_explanation
+            );
 
             // adding results to session storage
             sessionStorage.setItem("books", JSON.stringify(response.data[0]));
@@ -191,6 +217,10 @@ function BookGrid(props) {
             );
             sessionStorage.setItem("hoveredBookList", JSON.stringify([]));
             sessionStorage.setItem("currentQueryBook", JSON.stringify(book));
+            sessionStorage.setItem(
+              "relevanceFeedbackExplanation",
+              JSON.stringify(response.data[2].relevance_feedback_explanation)
+            );
           })
           .catch((error) => {
             throw error;
@@ -239,7 +269,17 @@ function BookGrid(props) {
             // console.log("current clicked book list ", currentWindowClickedBookList);
             setBooks(response.data[0]);
             setFilteredBooks(response.data[0]);
-            setGlobalExplanation([globalExplanation[1], response.data[1]]);
+            setGlobalExplanation([
+              globalExplanation[1],
+              {
+                genre_comb: 1.0,
+                supersense: 1.0,
+                gender: 1.0,
+                panel_ratio: 1.0,
+                comic_cover_img: 1.0,
+                comic_cover_txt: 1.0,
+              },
+            ]);
             console.log("New Global Explanation: ", globalExplanation);
             console.log(
               "search results for searchbar input: ",
@@ -275,6 +315,10 @@ function BookGrid(props) {
                 comic_cover_img: 1.0,
                 comic_cover_txt: 1.0,
               })
+            );
+            sessionStorage.setItem(
+              "relevanceFeedbackExplanation",
+              JSON.stringify(response.data[2].relevance_feedback_explanation)
             );
           })
           .catch((error) => {
@@ -321,14 +365,14 @@ function BookGrid(props) {
 
       // set state of global explnanation to user provided and set editable flag
       setGlobalExplanation(newGlobalExplanation);
-      setIsEditable(data.isEditable);
+      setIsEditable((previsEditable) => true);
       sessionStorage.setItem(
         "globalExplanation",
         JSON.stringify([globalExplanation[1], data.userChosenFacetWeights])
       );
       console.log("User updated global explanation: ", data);
     } else {
-      setIsEditable(data.isEditable);
+      setIsEditable((previsEditable) => false);
     }
   };
 
@@ -366,6 +410,10 @@ function BookGrid(props) {
       );
       sessionStorage.setItem("hoveredBookList", JSON.stringify([]));
       sessionStorage.setItem("currentQueryBook", JSON.stringify(q));
+      sessionStorage.setItem(
+        "relevanceFeedbackExplanation",
+        JSON.stringify(["no explanation available"])
+      );
     } else {
       console.log("page refreshed");
 
@@ -386,6 +434,9 @@ function BookGrid(props) {
       );
       setSearchBarInput(() =>
         JSON.parse(sessionStorage.getItem("searchBarInput"))
+      );
+      setRelevanceFeedbackExplanation(() =>
+        JSON.parse(sessionStorage.getItem("relevanceFeedbackExplanation"))
       );
       console.log("states refreshed");
     }
@@ -409,6 +460,10 @@ function BookGrid(props) {
     console.log("state has changed unique, initalized states");
   }, []);
 
+  useEffect(() => {
+    console.log(relevanceFeedbackExplanation);
+  }, [relevanceFeedbackExplanation]);
+
   //detect refresh event and alert user
   useEffect(() => {
     window.onbeforeunload = function () {
@@ -420,18 +475,19 @@ function BookGrid(props) {
     };
 
     return () => {
-      console.log("window null settign");
+      console.log("window null setting");
       window.onbeforeunload = null;
     };
   }, []);
 
   return (
     <div className="app-container">
-      <div className="nav-bar">
+      {/* <div className="nav-bar">
+        <HomeLogo />
         <div className="search-container">
           <SearchContainer getUserInputsFromSearchBar={ProcessSearchBarInput} />
         </div>
-      </div>
+      </div> */}
       <div className="main-screen">
         <div className="book-grid">
           {books &&
@@ -507,10 +563,30 @@ function BookGrid(props) {
 
           <div className="global-explanation-container">
             {/* <BarchartApp global_explanations_lst={globalExplanation} /> */}
-            <GlobalExplanationSliderGrid
-              inputData={globalExplanation[1]}
-              onSubmit={handleGlobalExplanationSliderSubmit}
-            />
+            <div className="global-explanation-slider">
+              <GlobalExplanationSliderGrid
+                inputData={globalExplanation[1]}
+                onSubmit={handleGlobalExplanationSliderSubmit}
+              />
+            </div>
+
+            <div className="global-explanation-chips">
+              {/* <header
+                style={{
+                  flex: "true",
+                  "text-align": "center",
+                  position: "relative",
+                }}
+              >
+                <h4>
+                  Themes from previous page that influenced current search
+                  results
+                </h4>
+              </header> */}
+              <section className="content">
+                <ChipsArray inputData={relevanceFeedbackExplanation} />
+              </section>
+            </div>
           </div>
 
           <div className="local-explanation-container">

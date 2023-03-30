@@ -42,11 +42,6 @@ function LinechartApp(props) {
     selected_book_story_pace.length
   );
   labels_lst = [...Array(max_len).keys()];
-  //console.log("previous pace: ", query_book_story_pace);
-  //console.log("current pace: ", selected_book_story_pace);
-  // const [localExplanation, setLocalExplanation] = useState(
-  //   DUMMY_LOCAL_EXPLANATION
-  // );
   const new_state = {
     data: {
       labels: labels_lst,
@@ -67,11 +62,6 @@ function LinechartApp(props) {
       ],
     },
   };
-
-  //setLocalExplanation(new_state);
-  //   useEffect(() => {
-  //     console.log("localExplanation: ", localExplanation);
-  //   }, [localExplanation]);
 
   const options = {
     responsive: true,

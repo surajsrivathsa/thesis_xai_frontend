@@ -110,17 +110,37 @@
 }
 
 .global-explanation-container {
+    padding: 10px;
+    text-align: center;
+    height: 650px;
+    display: flex;
+    position: relative;
+}
+
+.global-explanation-slider {
     padding: 20px;
     text-align: center;
-    height: 400px;
+    height: 250px;
     display: flex;
+    position:absolute;
+}
+.global-explanation-chips {
+    padding: 20px;
+    text-align: center;
+    height: 250px;
+    display: flex;
+    position: relative;
+    margin-top: 500px;
+
 }
 
 .local-explanation-container {
     padding: 20px;
     text-align: center;
-    height: 400px;
+    height: 600px;
     display: flex;
+    position:relative;
+    margin-top: 12rem;
 }
 
 .side-bar-container {
