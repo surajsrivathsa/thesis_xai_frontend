@@ -25,6 +25,7 @@ function Row({ category, bookList, isColumn }) {
       book_title: queryBook.book_title,
       text: queryBook.text,
       type: queryBook.type,
+      year: queryBook.year,
     };
 
     // default all facet weights to one

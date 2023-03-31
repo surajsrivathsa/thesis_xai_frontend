@@ -18,11 +18,20 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import GlobalExplanationSliderGrid from "../components/global_explanation_slider";
 import FetchSearchResultsforSearchbarQuery from "../backend_api_calls/FetchSearchResultsforSearchbarQuery";
 import FetchSearchResultsForBookGrid from "../backend_api_calls/FetchSearchResultsForBookGrid";
-import ChipsArray from "../components/global_explanation_relevance_feedback";
+import ExplanationChips from "../components/global_explanation_relevance_feedback";
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
-const initial_chips = ["No Themes Found"];
+const initial_chips = [
+  {
+    comic_no: 0,
+    book_title: "BBlue Bolt",
+    genre: "Superhero",
+    year: 1950,
+    query_book: false,
+    explanation_lst: ["No Themes Found"],
+  },
+];
 
 function HomeLogo() {
   return (
@@ -412,7 +421,7 @@ function BookGrid(props) {
       sessionStorage.setItem("currentQueryBook", JSON.stringify(q));
       sessionStorage.setItem(
         "relevanceFeedbackExplanation",
-        JSON.stringify(["no explanation available"])
+        JSON.stringify(initial_chips)
       );
     } else {
       console.log("page refreshed");
@@ -491,7 +500,7 @@ function BookGrid(props) {
       <div className="main-screen">
         <div className="book-grid">
           {books &&
-            books.map((book) => (
+            books.slice(0, 15).map((book) => (
               <Link
                 key={book.id}
                 className="link"
@@ -571,20 +580,8 @@ function BookGrid(props) {
             </div>
 
             <div className="global-explanation-chips">
-              {/* <header
-                style={{
-                  flex: "true",
-                  "text-align": "center",
-                  position: "relative",
-                }}
-              >
-                <h4>
-                  Themes from previous page that influenced current search
-                  results
-                </h4>
-              </header> */}
               <section className="content">
-                <ChipsArray inputData={relevanceFeedbackExplanation} />
+                <ExplanationChips inputData={relevanceFeedbackExplanation} />
               </section>
             </div>
           </div>

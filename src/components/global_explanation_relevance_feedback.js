@@ -1,69 +1,79 @@
-import React, { useState, useEffect } from "react";
-import { styled } from "@mui/material/styles";
-import Chip from "@mui/material/Chip";
-import Paper from "@mui/material/Paper";
-import TagFacesIcon from "@mui/icons-material/TagFaces";
-import "./global_explanation_relevance_feedback.css";
+import React from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import Chip from "@material-ui/core/Chip";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const initial_chips = [
-  { key: 0, label: "Angular" },
-  { key: 1, label: "jQuery" },
-  { key: 2, label: "Polymer" },
-  { key: 3, label: "React" },
-  { key: 4, label: "Vue.js" },
+  {
+    comic_no: 0,
+    book_title: "Blue Bolt",
+    query_book: false,
+    explanation_lst: ["Angular", "Black and Blue", "Yellowed"],
+  },
+  {
+    comic_no: 521,
+    book_title: "Tin Tin",
+    query_book: false,
+    explanation_lst: ["steamship themed", "Mummy Coffin", "Pharoahs and Egypt"],
+  },
+  {
+    comic_no: 551,
+    book_title: "Asterix",
+    query_book: false,
+    explanation_lst: [
+      "Roman clothes",
+      "Golden and Blue",
+      "Coloseium",
+      "No Themes Found",
+    ],
+  },
 ];
 
-const ListItem = styled("li")(({ theme }) => ({
-  margin: theme.spacing(0.5),
+const useStyles = makeStyles((theme) => ({
+  chip: {
+    margin: theme.spacing(0.5),
+  },
+  header: {
+    margin: theme.spacing(1, 0),
+  },
 }));
 
-export default function ChipsArray({ inputData }) {
-  let wantedArray = inputData.map((obj_str, index) => {
-    return {
-      key: index,
-      label: obj_str,
-    };
-  });
+function ExplanationChips(props) {
+  const books = props.inputData || initial_chips;
+  const classes = useStyles();
 
-  // const [chipData, setChipData] = React.useState(wantedArray);
+  const queryBooks = books.filter((book) => book.query_book);
+  const nonQueryBooks = books.filter((book) => !book.query_book);
 
-  // setChipData(wantedArray);
-
-  // const handleDelete = (chipToDelete) => () => {
-  //   setChipData((chips) =>
-  //     chips.filter((chip) => chip.key !== chipToDelete.key)
-  //   );
-  // };
+  const allBookTitles = books.map((book) => book.book_title);
 
   return (
-    <Paper
-      sx={{
-        display: "flex",
-        justifyContent: "center",
-        flexWrap: "wrap",
-        listStyle: "none",
-        p: 0.5,
-        m: 0,
-      }}
-      component="ul"
-    >
-      {wantedArray.map((data) => {
-        let icon;
-
-        if (data.label === "React") {
-          icon = <TagFacesIcon />;
-        }
-
-        return (
-          <ListItem key={data.key}>
+    <div className={classes.root}>
+      {queryBooks.length > 0 && (
+        <h3 className={classes.header}>
+          Because you were interested in{" "}
+          {allBookTitles.map((title, index) => (
+            <span key={title}>
+              {title}
+              {index !== allBookTitles.length - 1 ? ", " : ""}
+            </span>
+          ))}
+        </h3>
+      )}
+      {books.map((book) =>
+        book.explanation_lst.map((explanation, index) => (
+          <Tooltip key={`${book.comic_no}-${index}`} title={book.book_title}>
             <Chip
-              icon={icon}
-              label={data.label}
-              // onDelete={data.label === "React" ? undefined : handleDelete(data)}
+              key={`${book.comic_no}-${index}`}
+              label={explanation}
+              color={book.query_book ? "secondary" : "primary"}
+              style={{ margin: "5px", flexWrap: "wrap" }}
             />
-          </ListItem>
-        );
-      })}
-    </Paper>
+          </Tooltip>
+        ))
+      )}
+    </div>
   );
 }
+
+export default ExplanationChips;

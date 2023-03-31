@@ -24132,6 +24132,7 @@ export const FAMOUS_TITLES_LIST = [
     book_title: "01- Asterix the Gaul",
     backdrop_path: "../../comic_book_covers_ui/original_542_1.jpeg",
     genre: "humor",
+    year: 1950,
   },
   {
     id: 525,
@@ -24139,6 +24140,7 @@ export const FAMOUS_TITLES_LIST = [
     book_title: "Archie 75 Series 001 - Archie (2015) (Digital-Empire)",
     backdrop_path: "../../comic_book_covers_ui/original_525_1.jpeg",
     genre: "teen|romance|humor",
+    year: 1950,
   },
   {
     id: 564,
@@ -24146,6 +24148,7 @@ export const FAMOUS_TITLES_LIST = [
     book_title: "Avengers001",
     backdrop_path: "../../comic_book_covers_ui/original_564_1.jpeg",
     genre: "superhero",
+    year: 1950,
   },
   {
     id: 637,
@@ -24153,6 +24156,7 @@ export const FAMOUS_TITLES_LIST = [
     book_title: "Batman 001",
     backdrop_path: "../../comic_book_covers_ui/original_637_1.jpeg",
     genre: "superhero|detective",
+    year: 1950,
   },
   {
     id: 677,
@@ -24161,6 +24165,7 @@ export const FAMOUS_TITLES_LIST = [
       "Captain America Comics 001 (1941) (Digital) (AnPymGold-Empire)",
     backdrop_path: "../../comic_book_covers_ui/original_677_1.jpeg",
     genre: "superhero",
+    year: 1950,
   },
   {
     id: 864,
@@ -24168,6 +24173,7 @@ export const FAMOUS_TITLES_LIST = [
     book_title: "Fantastic_Four001",
     backdrop_path: "../../comic_book_covers_ui/original_864_1.jpeg",
     genre: "superhero",
+    year: 1950,
   },
   {
     id: 1282,
@@ -24175,6 +24181,7 @@ export const FAMOUS_TITLES_LIST = [
     book_title: "Maus 1 - Art Spiegelman",
     backdrop_path: "../../comic_book_covers_ui/original_1282_1.jpeg",
     genre: "dark",
+    year: 1950,
   },
   {
     id: 1302,
@@ -24182,6 +24189,7 @@ export const FAMOUS_TITLES_LIST = [
     book_title: "01 - Sleep of the Just",
     backdrop_path: "../../comic_book_covers_ui/original_1302_1.jpeg",
     genre: "dark fanatasy",
+    year: 1950,
   },
 ];
 
@@ -24192,6 +24200,7 @@ export const CLASSICS_LIST = [
     book_title: "Brenda Starr - Silver lining in sun valley",
     backdrop_path: "../../comic_book_covers_ui/original_12_1.jpeg",
     genre: "detective|female",
+    year: 1950,
   },
   {
     id: 34,
@@ -24199,6 +24208,7 @@ export const CLASSICS_LIST = [
     book_title: "Cowgirl Romances -  Ride Fast for Wyoming",
     backdrop_path: "../../comic_book_covers_ui/original_34_1.jpeg",
     genre: "western|romance",
+    year: 1950,
   },
   {
     id: 51,
@@ -24206,6 +24216,7 @@ export const CLASSICS_LIST = [
     book_title: "Crack Western - Mexican Massacare",
     backdrop_path: "../../comic_book_covers_ui/original_51_1.jpeg",
     genre: "western|adventure",
+    year: 1950,
   },
   {
     id: 80,
@@ -24213,6 +24224,7 @@ export const CLASSICS_LIST = [
     book_title: "Famous Funnies - 24",
     backdrop_path: "../../comic_book_covers_ui/original_80_1.jpeg",
     genre: "humor",
+    year: 1950,
   },
   {
     id: 152,
@@ -24220,6 +24232,7 @@ export const CLASSICS_LIST = [
     book_title: "Jumbo Comics - Sheena - Pantheras of kajoo kazar",
     backdrop_path: "../../comic_book_covers_ui/original_152_1.jpeg",
     genre: "humor",
+    year: 1950,
   },
   {
     id: 256,
@@ -24227,6 +24240,7 @@ export const CLASSICS_LIST = [
     book_title: "Manhunt: The Avenging Axe",
     backdrop_path: "../../comic_book_covers_ui/original_256_1.jpeg",
     genre: "detective|action",
+    year: 1950,
   },
   {
     id: 477,
@@ -24234,6 +24248,7 @@ export const CLASSICS_LIST = [
     book_title: "Boomerang Blitz: Clipper Kirk",
     backdrop_path: "../../comic_book_covers_ui/original_477_1.jpeg",
     genre: "war|aviation|action",
+    year: 1950,
   },
 ];
 

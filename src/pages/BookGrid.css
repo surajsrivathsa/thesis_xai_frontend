@@ -137,7 +137,7 @@
 .local-explanation-container {
     padding: 20px;
     text-align: center;
-    height: 600px;
+    height: 400px;
     display: flex;
     position:relative;
     margin-top: 12rem;
@@ -184,8 +184,8 @@
 }
 
 .book-object {
-  width: 73%;
-  height: 76%;
+  width: 80%;
+  height: 90%;
   margin: 10px;
   border: 1px #ccc;
   border-radius: 5px;
@@ -211,7 +211,7 @@
 /* Added new grid styles */
 .book-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   grid-auto-rows: repeat(3, 1fr);
   gap: 2rem;
   margin-left: 5px;
@@ -242,8 +242,8 @@
 }
 
 .book img {
-  display: block;
-  width: 70%;
+  display: cover;
+  width: 60%;
   height: auto;
 }
 

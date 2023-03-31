@@ -5,6 +5,7 @@ import LandingPage from "../pages/LandingPage";
 import BookGrid from "../pages/BookGrid";
 import SearchContainer from "../components/search_bar";
 import NavBar from "../components/navbar";
+import AboutUs from "../pages/AboutUs";
 
 const AppRoutes = () => {
   return (
@@ -13,6 +14,7 @@ const AppRoutes = () => {
         <NavBar />
         <Routes>
           <Route path="/" element={<LandingPage />} exact />
+          <Route path="/about-us" element={<AboutUs />} />
           <Route path="/search/" element={<BookGrid />} exact />
           <Route path="/search/:id" element={<BookGrid />} />
         </Routes>

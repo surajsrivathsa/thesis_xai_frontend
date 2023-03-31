@@ -21,6 +21,7 @@ function HomeLogo() {
 
 function NavBar() {
   const navigate = useNavigate();
+  const [showAbout, setShowAbout] = useState(false);
 
   function generateGrid(book) {
     //event.preventDefault();
@@ -89,6 +90,9 @@ function NavBar() {
   return (
     <div className="nav-bar">
       <HomeLogo />
+      <div className="about-us-link">
+        <Link to="/about-us">About Us</Link>
+      </div>
       <div className="search-container">
         <SearchContainer getUserInputsFromSearchBar={generateGrid} />
       </div>
