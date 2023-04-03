@@ -33,11 +33,12 @@
 }
 
 .title {
-  font-size: 1.4vw;
+  font-size: 1.8vw;
   color: black;
   font-weight: 700;
   margin: 1.6em 0 -0.5em 0;
   min-width: 6em;
+  margin-bottom: 1rem;
 }
 
 .title:hover {
@@ -46,7 +47,7 @@
 
 .image {
   object-fit: contain;
-  max-height: 150px;
+  max-height: auto;
   margin: 17px 5px 17px 0;
   transition: transform 450ms;
   border-radius: 3px;
@@ -59,7 +60,8 @@
 
 .imageLarge {
   margin: 1em 5px 17px 0;
-  max-height: 250px;
+  max-height: 370px;
+  max-width: 70%;
   transition: transform 450ms;
   border-radius: 5px;
   cursor: pointer;

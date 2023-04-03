@@ -36,10 +36,10 @@ const FACET_KEYS = ["Who", "What", "When", "Why", "Where", "How"];
 function LinechartApp(props) {
   console.log("story pace props: ", props);
   var query_book_story_pace = props.story_pace[0];
-  var selected_book_story_pace = props.story_pace[1];
+  var interested_book_story_pace = props.story_pace[1];
   var max_len = Math.max(
     query_book_story_pace.length,
-    selected_book_story_pace.length
+    interested_book_story_pace.length
   );
   labels_lst = [...Array(max_len).keys()];
   const new_state = {
@@ -51,13 +51,15 @@ function LinechartApp(props) {
           borderColor: "rgb(255, 99, 132)",
           backgroundColor: "rgba(255, 99, 132, 0.5)",
           data: query_book_story_pace,
+          lineTension: 0.95,
         },
 
         {
-          label: "selected_book",
+          label: "interested_book",
           borderColor: "rgb(53, 162, 235)",
           backgroundColor: "rgba(53, 162, 235, 0.5)",
-          data: selected_book_story_pace,
+          data: interested_book_story_pace,
+          lineTension: 0.95,
         },
       ],
     },

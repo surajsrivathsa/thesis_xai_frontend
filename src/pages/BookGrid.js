@@ -554,14 +554,14 @@ function BookGrid(props) {
         <div className="side-bar-container">
           <div>
             {currentQueryBook && (
-              <p>
-                Current Query Seed: {currentQueryBook.book_title} -{" "}
+              <p style={{ color: "rgb(255, 99, 132)" }}>
+                Your Selection: {currentQueryBook.book_title} -{" "}
                 {currentQueryBook.genre}
               </p>
             )}
             {hoveredBook && (
-              <p>
-                Clicked Book: {hoveredBook.book_title} - {hoveredBook.genre}
+              <p style={{ color: "rgb(53, 162, 235)" }}>
+                Your Interest: {hoveredBook.book_title} - {hoveredBook.genre}
               </p>
             )}
           </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
-import { Slider, Button, Switch } from "@mui/material";
+import { Slider, Button, Switch, Tooltip } from "@mui/material";
 
 const inputKeys = [
   "genre_comb",
@@ -18,6 +18,17 @@ const INITIAL_STATE = {
   supersense: 1.0,
   comic_cover_img: 1.0,
   comic_cover_txt: 1.0,
+};
+
+const TOOLTIP_LST = {
+  genre_comb:
+    "Amount of Genres such as Action, Adventure, Humor, Romance, Spy etc in book",
+  gender: "Gender Ratio such as Male, Female characters in book",
+  panel_ratio: "Book Length and Ease of Reading the book",
+  supersense:
+    "Coarse topics such as weather, adjectives, emotions that are talked about in the book",
+  comic_cover_img: "Themes from Important Images in book",
+  comic_cover_txt: "Important Images from Book",
 };
 
 const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
@@ -102,40 +113,30 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
     }
   };
 
-  // send updated global explanation to main component
-  // useEffect(() => {
-  //   if (isEditable === true) {
-  //     console.log("submitted user global slider data: ", data);
-  //     onSubmit(data);
-  //   } else {
-  //     console.log("submitted default data from global slider: ", data);
-  //     onSubmit({
-  //       genre_comb: 1.0,
-  //       gender: 1.0,
-  //       panel_ratio: 1.0,
-  //       supersense: 1.0,
-  //       comic_cover_img: 1.0,
-  //       comic_cover_txt: 1.0,
-  //     });
-  //   }
-  // }, []);
-
   const columns = [
-    { field: "key", headerName: "Facet", width: 150 },
+    {
+      field: "key",
+      headerName: "Facet",
+      width: 150,
+    },
     {
       field: "value",
       headerName: "Contribution towards Search",
       width: 220,
       renderCell: (params) => (
-        <Slider
-          min={0}
-          max={1}
-          step={0.1}
-          value={data[params.row.key]}
-          disabled={!isEditable}
-          onChange={(event, value) => handleSliderChange(params.row.key, value)}
-          sx={sliderSX}
-        />
+        <Tooltip title={TOOLTIP_LST[params.row.key]}>
+          <Slider
+            min={0}
+            max={1}
+            step={0.1}
+            value={data[params.row.key]}
+            disabled={!isEditable}
+            onChange={(event, value) =>
+              handleSliderChange(params.row.id, value)
+            }
+            sx={sliderSX}
+          />
+        </Tooltip>
       ),
     },
     {

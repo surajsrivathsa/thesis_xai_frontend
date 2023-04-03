@@ -1,13 +1,12 @@
 .container {
-  margin-top: 25%;
+  margin-top: 10%;
   z-index: 10;
 }
 
 .image {
   object-fit: contain;
-  max-width: 100%;
+  max-width: 70%;
   max-height: 150px;
-  min-height: 100px;
   transition: transform 450ms;
   border-radius: 3px;
   cursor: pointer;
