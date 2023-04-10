@@ -161,6 +161,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
   ];
 
   const rows = inputKeys.map((key) => ({ id: key, key, value: data[key] }));
+  console.log("rows: ", rows);
 
   return (
     <div>

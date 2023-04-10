@@ -72,6 +72,31 @@ function LinechartApp(props) {
     },
   };
 
+  // const options = {
+  //   responsive: true,
+  //   legend: {
+  //     display: true,
+  //   },
+  //   scales: {
+  //     xAxes: [
+  //       {
+  //         scaleLabel: {
+  //           display: true,
+  //           labelString: "X-axis Label",
+  //         },
+  //       },
+  //     ],
+  //     yAxes: [
+  //       {
+  //         scaleLabel: {
+  //           display: true,
+  //           labelString: "Y-axis Label",
+  //         },
+  //       },
+  //     ],
+  //   },
+  // };
+
   return (
     <Line
       data={new_state.data}
