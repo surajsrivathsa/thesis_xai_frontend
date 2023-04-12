@@ -19,6 +19,9 @@ import GlobalExplanationSliderGrid from "../components/global_explanation_slider
 import FetchSearchResultsforSearchbarQuery from "../backend_api_calls/FetchSearchResultsforSearchbarQuery";
 import FetchSearchResultsForBookGrid from "../backend_api_calls/FetchSearchResultsForBookGrid";
 import ExplanationChips from "../components/global_explanation_relevance_feedback";
+import { makeStyles } from "@material-ui/core/styles";
+import Chip from "@material-ui/core/Chip";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
@@ -535,14 +538,45 @@ function BookGrid(props) {
                   />
                   {hoveredBook === book && showOverlay && (
                     <div className="book-overlay">
-                      <p>genre - {book.genre.split("|").join(", ")}</p>
+                      {/* <p>genre - {book.genre.split("|").join(", ")}</p> */}
                       <p>
-                        {FACET_KEYS.map(
-                          (key) =>
-                            Array.from(localExplanation[3][key]) &&
-                            Array.from(localExplanation[3][key])
-                              .slice(0, 2)
-                              .join(", ") + ", "
+                        {Array.from(book.genre.split("|")).map(
+                          (genre_str, index) => (
+                            <Tooltip
+                              key={`${book.comic_no}-${index}`}
+                              title="genre"
+                            >
+                              <Chip
+                                key={`${book.comic_no}-${index}`}
+                                label={genre_str}
+                                color={"default"}
+                                style={{
+                                  margin: "5px",
+                                  flexWrap: "wrap",
+                                  fontSize: 18,
+                                }}
+                              />
+                            </Tooltip>
+                          )
+                        )}
+                      </p>
+                      <p>
+                        {FACET_KEYS.map((key) =>
+                          Array.from(localExplanation[3][key]).map(
+                            (facet_str, index) => (
+                              <Tooltip
+                                key={`${book.comic_no}-${index}`}
+                                title={key}
+                              >
+                                <Chip
+                                  key={`${book.comic_no}-${index}`}
+                                  label={facet_str}
+                                  color={"primary"}
+                                  style={{ margin: "5px", flexWrap: "wrap" }}
+                                />
+                              </Tooltip>
+                            )
+                          )
                         )}
                       </p>
                     </div>
@@ -556,12 +590,12 @@ function BookGrid(props) {
             {currentQueryBook && (
               <p style={{ color: "rgb(255, 99, 132)" }}>
                 Your Selection: {currentQueryBook.book_title} -{" "}
-                {currentQueryBook.genre}
+                {currentQueryBook.id}
               </p>
             )}
             {hoveredBook && (
               <p style={{ color: "rgb(53, 162, 235)" }}>
-                Your Interest: {hoveredBook.book_title} - {hoveredBook.genre}
+                Your Interest: {hoveredBook.book_title} - {hoveredBook.id}
               </p>
             )}
           </div>
