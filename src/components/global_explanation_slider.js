@@ -118,6 +118,11 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
       field: "key",
       headerName: "Facet",
       width: 150,
+      renderCell: (params) => (
+        <Tooltip title={TOOLTIP_LST[params.row.key]}>
+          <span className="table-cell-trucate">{params.row.key}</span>
+        </Tooltip>
+      ),
     },
     {
       field: "value",

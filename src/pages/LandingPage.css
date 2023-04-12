@@ -1,5 +1,5 @@
-.langing-page{
-    display: flex;
+.landing-page{
+  display: flex;
   position:relative;
   flex-direction: column;
   justify-content: flex-start;
@@ -11,5 +11,5 @@
   margin-left: 1%;
   margin-bottom: 1%;
   background-color: white;
-  margin-top: 4%;
+  margin-top: 5%;
 }

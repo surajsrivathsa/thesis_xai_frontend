@@ -9,7 +9,7 @@ import "./LandingPage.css";
 function LandingPage() {
   console.log("inside landing page");
   return (
-    <div className="langing-page">
+    <div className="landing-page">
       <RowContainer
         famous_titles_booklist={FAMOUS_TITLES_LIST}
         classics_booklist={CLASSICS_LIST}

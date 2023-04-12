@@ -70,6 +70,26 @@ function LinechartApp(props) {
     legend: {
       display: true,
     },
+    scales: {
+      y: {
+        title: {
+          display: true,
+          text: "Panel Count",
+          font: {
+            size: 18, // adjust as needed
+          },
+        },
+      },
+      x: {
+        title: {
+          display: true,
+          text: "Page Number",
+          font: {
+            size: 18, // adjust as needed
+          },
+        },
+      },
+    },
   };
 
   // const options = {
@@ -98,13 +118,16 @@ function LinechartApp(props) {
   // };
 
   return (
-    <Line
-      data={new_state.data}
-      width={null}
-      height={null}
-      options={options}
-      className="local-explanation"
-    />
+    <div className="local-explanation">
+      <h3>Story Pace Comparision</h3>
+      <Line
+        data={new_state.data}
+        width={null}
+        height={null}
+        options={options}
+        className="local-explanation"
+      />
+    </div>
   );
 }
 
