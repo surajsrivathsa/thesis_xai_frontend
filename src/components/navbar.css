@@ -17,7 +17,7 @@
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  margin-top: 5px;
+  margin-top: 10px;
   width: 70%;
   margin-right: auto;
   margin-left: auto;
@@ -41,6 +41,16 @@
 
 .about-us-link:hover {
   text-decoration: underline;
+}
+
+.home-logo {
+  display: inline-block;
+  margin-left: 4%;
+  margin-top: 15px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  text-decoration: none;
 }
 
 /* .nav-bar {

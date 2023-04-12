@@ -10,9 +10,9 @@ function HomeLogo() {
     <div className="home-logo">
       <Link to="/">
         <img
-          src="../../logo192.png"
+          src="../../home_button_2.png"
           alt="Home"
-          style={{ height: "50px", width: "50px" }}
+          style={{ height: "55px", width: "55px" }}
         />
       </Link>
     </div>
@@ -91,7 +91,13 @@ function NavBar() {
     <div className="nav-bar">
       <HomeLogo />
       <div className="about-us-link">
-        <Link to="/about-us">About Us</Link>
+        <Link to="/about-us">
+          <img
+            src="../../about-us-icon-9.jpg"
+            alt="About Us"
+            style={{ height: "55px", width: "55px" }}
+          />
+        </Link>
       </div>
       <div className="search-container">
         <SearchContainer getUserInputsFromSearchBar={generateGrid} />
