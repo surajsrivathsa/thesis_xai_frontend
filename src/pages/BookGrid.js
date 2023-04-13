@@ -5,6 +5,7 @@ import BarchartApp from "../components/global_explanation";
 import {
   LinechartApp,
   FacetKeywordsComp,
+  StoryPaceExplanation,
 } from "../components/local_explanation";
 import SearchContainer from "../components/search_bar";
 import {
@@ -621,7 +622,7 @@ function BookGrid(props) {
           </div>
 
           <div className="local-explanation-container">
-            <LinechartApp story_pace={localExplanation} />
+            <StoryPaceExplanation story_pace={localExplanation} />
             {/* <div>
               <FacetKeywordsComp facets={localExplanation} />
             </div> */}
