@@ -260,6 +260,19 @@ function StoryPaceExplanation(props) {
     return (
       <div className="local-explanation">
         <h3>Story Pace Comparision</h3>
+        <Line
+          data={new_state.data}
+          width={null}
+          height={null}
+          options={options}
+          className="local-explanation"
+        />
+      </div>
+    );
+  } else {
+    return (
+      <div className="local-explanation">
+        <h3>Story Pace Comparision</h3>
         <CardGrid
           pagecount={query_book_pages}
           story_pace={panel_ratio_query_book}
@@ -271,19 +284,6 @@ function StoryPaceExplanation(props) {
           story_pace={panel_ratio_interested_book}
           pagecount_str="Interested Book Page Count"
           story_pace_str="Interested Book Story Pace"
-        />
-      </div>
-    );
-  } else {
-    return (
-      <div className="local-explanation">
-        <h3>Story Pace Comparision</h3>
-        <Line
-          data={new_state.data}
-          width={null}
-          height={null}
-          options={options}
-          className="local-explanation"
         />
       </div>
     );
