@@ -49,7 +49,17 @@ function ExplanationChips(props) {
 
   return (
     <div className={classes.root}>
-      {queryBooks.length > 0 && (
+      {queryBooks.length > 0 ? (
+        <h3 className={classes.header}>
+          Because you were interested in{" "}
+          {allBookTitles.map((title, index) => (
+            <span key={title}>
+              {title}
+              {index !== allBookTitles.length - 1 ? ", " : ""}
+            </span>
+          ))}
+        </h3>
+      ) : (
         <h3 className={classes.header}>
           Because you were interested in{" "}
           {allBookTitles.map((title, index) => (
@@ -67,7 +77,7 @@ function ExplanationChips(props) {
               key={`${book.comic_no}-${index}`}
               label={explanation}
               color={book.query_book ? "secondary" : "primary"}
-              style={{ margin: "5px", flexWrap: "wrap" }}
+              style={{ margin: "5px", flexWrap: "wrap", fontSize: 16 }}
             />
           </Tooltip>
         ))

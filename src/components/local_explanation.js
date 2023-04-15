@@ -3,6 +3,7 @@ import { Bar, Line } from "react-chartjs-2";
 import "./local_explanation.css";
 
 import { Card, CardHeader, CardContent, Grid } from "@mui/material";
+import { capitalize } from "@material-ui/core";
 
 var labels_lst = ["query_book", "selected_book"];
 
@@ -158,28 +159,38 @@ function FacetKeywordsComp(props) {
   );
 }
 
-const CardGrid = ({ pagecount, story_pace, pagecount_str, story_pace_str }) => {
+const CardGrid = ({
+  pagecount,
+  story_pace,
+  pagecount_str,
+  story_pace_str,
+  color_str,
+}) => {
   return (
     <Grid container spacing={3}>
       <Grid item xs={5}>
         <Card>
           <CardHeader
-            title={pagecount_str}
+            title={<span style={{ color: color_str }}>{pagecount_str}</span>}
             titleTypographyProps={{ fontSize: 14 }}
             subheaderTypographyProps={{ fontSize: 12 }}
           />
-          <CardContent>{pagecount}</CardContent>
+          <CardContent>
+            {<span style={{ color: color_str }}>{pagecount}</span>}
+          </CardContent>
         </Card>
       </Grid>
       <Grid item xs={6}>
         <Card>
           <CardHeader
-            title={story_pace_str}
+            title={<span style={{ color: color_str }}>{story_pace_str}</span>}
             subheader="higher the number, higher the pace"
-            titleTypographyProps={{ fontSize: 14 }}
-            subheaderTypographyProps={{ fontSize: 12 }}
+            titleTypographyProps={{ fontSize: 16 }}
+            subheaderTypographyProps={{ fontSize: 14 }}
           />
-          <CardContent>{story_pace}</CardContent>
+          <CardContent>
+            {<span style={{ color: color_str }}>{story_pace}</span>}
+          </CardContent>
         </Card>
       </Grid>
     </Grid>
@@ -278,12 +289,14 @@ function StoryPaceExplanation(props) {
           story_pace={panel_ratio_query_book}
           pagecount_str="Query Book Page Count"
           story_pace_str="Query Book Story Pace"
+          color_str="rgb(255, 99, 132)"
         />
         <CardGrid
           pagecount={interested_book_pages}
           story_pace={panel_ratio_interested_book}
           pagecount_str="Interested Book Page Count"
           story_pace_str="Interested Book Story Pace"
+          color_str="rgb(53, 162, 235)"
         />
       </div>
     );

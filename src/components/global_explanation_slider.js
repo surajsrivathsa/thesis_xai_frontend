@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Slider, Button, Switch, Tooltip } from "@mui/material";
+import { capitalize } from "@material-ui/core";
 
 const inputKeys = [
   "genre_comb",
@@ -10,6 +11,15 @@ const inputKeys = [
   "comic_cover_img",
   "comic_cover_txt",
 ];
+
+const FACET_NAME_OBJ = {
+  genre_comb: "Genre",
+  gender: "Gender",
+  panel_ratio: "Story Pace",
+  supersense: "Topics and Keywords from Dialogues",
+  comic_cover_img: "Book Cover Image",
+  comic_cover_txt: "Topics from Book Cover Image",
+};
 
 const INITIAL_STATE = {
   genre_comb: 1.0,
@@ -44,7 +54,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
 
   const handleSliderChange = (key, value) => {
     setData((prevData) => ({ ...prevData, [key]: value }));
-    console.log("submitted user global slider data: ");
+    console.log("submitted user global slider data: ", data);
     onSubmit({
       isEditable: isEditable,
       userChosenFacetWeights: data,
@@ -117,24 +127,24 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
     {
       field: "key",
       headerName: "Facet",
-      width: 150,
+      width: 260,
       renderCell: (params) => (
         <Tooltip title={TOOLTIP_LST[params.row.key]}>
-          <span className="table-cell-trucate">{params.row.key}</span>
+          <span className="table-cell-trucate">{params.row.id}</span>
         </Tooltip>
       ),
     },
     {
       field: "value",
       headerName: "Contribution towards Search",
-      width: 220,
+      width: 270,
       renderCell: (params) => (
-        <Tooltip title={TOOLTIP_LST[params.row.key]}>
+        <Tooltip title={TOOLTIP_LST[params.row.id]}>
           <Slider
             min={0}
             max={1}
             step={0.1}
-            value={data[params.row.key]}
+            value={data[params.row.id]}
             disabled={!isEditable}
             onChange={(event, value) =>
               handleSliderChange(params.row.id, value)
@@ -165,7 +175,11 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
     },
   ];
 
-  const rows = inputKeys.map((key) => ({ id: key, key, value: data[key] }));
+  const rows = inputKeys.map((k) => ({
+    id: k,
+    key: FACET_NAME_OBJ[k],
+    value: data[k],
+  }));
   console.log("rows: ", rows);
 
   return (

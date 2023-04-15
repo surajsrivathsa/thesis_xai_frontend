@@ -517,6 +517,11 @@ function BookGrid(props) {
         </div>
       </div> */}
       <div className="main-screen">
+        <div className="global-explanation-chips">
+          <section className="content">
+            <ExplanationChips inputData={relevanceFeedbackExplanation} />
+          </section>
+        </div>
         <div className="book-grid">
           {books &&
             books.slice(0, 15).map((book) => (
@@ -618,14 +623,14 @@ function BookGrid(props) {
         <div className="side-bar-container">
           <div>
             {currentQueryBook && (
-              <p style={{ color: "rgb(255, 99, 132)" }}>
+              <p style={{ color: "rgb(255, 99, 132)", fontSize: 18 }}>
                 Your Selection: {currentQueryBook.book_title} -{" "}
-                {currentQueryBook.id}
+                {currentQueryBook.comic_no}
               </p>
             )}
             {hoveredBook && (
-              <p style={{ color: "rgb(53, 162, 235)" }}>
-                Your Interest: {hoveredBook.book_title} - {hoveredBook.id}
+              <p style={{ color: "rgb(53, 162, 235)", fontSize: 18 }}>
+                Your Interest: {hoveredBook.book_title} - {hoveredBook.comic_no}
               </p>
             )}
           </div>
@@ -636,6 +641,7 @@ function BookGrid(props) {
 
           <div className="global-explanation-container">
             {/* <BarchartApp global_explanations_lst={globalExplanation} /> */}
+            <h3>Facet Contribution Towards Search</h3>
             <div className="global-explanation-slider">
               <GlobalExplanationSliderGrid
                 inputData={globalExplanation[1]}
@@ -643,11 +649,11 @@ function BookGrid(props) {
               />
             </div>
 
-            <div className="global-explanation-chips">
+            {/* <div className="global-explanation-chips">
               <section className="content">
                 <ExplanationChips inputData={relevanceFeedbackExplanation} />
               </section>
-            </div>
+            </div> */}
           </div>
 
           <div className="local-explanation-container">
