@@ -147,7 +147,7 @@ function BookGrid(props) {
         .catch((error) => {
           console.log(error);
         });
-    }, 1000);
+    }, 2000);
   };
 
   const handleMouseLeave = () => {
@@ -389,6 +389,21 @@ function BookGrid(props) {
     }
   };
 
+  // handle thunbs up and thumbs down
+  const handleThumbsUp = (book) => {
+    const updatedBooks = books.map((b) =>
+      b.id === book.id ? { ...b, thumbsUp: b.thumbsUp + 1 } : b
+    );
+    setBooks(updatedBooks);
+  };
+
+  const handleThumbsDown = (book) => {
+    const updatedBooks = books.map((b) =>
+      b.id === book.id ? { ...b, thumbsDown: b.thumbsDown + 1 } : b
+    );
+    setBooks(updatedBooks);
+  };
+
   // added local storage to persist state on refresh
   useEffect(() => {
     if (state && state.books && state.query) {
@@ -512,6 +527,21 @@ function BookGrid(props) {
                 state={{ book: book }}
                 exact="true"
               >
+                <div className="thumbs">
+                  <button
+                    onClick={() => handleThumbsUp(book)}
+                    className="thumbs-up"
+                  >
+                    👍 {book.thumbsUp}
+                  </button>
+                  <button
+                    onClick={() => handleThumbsDown(book)}
+                    className="thumbs-down"
+                  >
+                    👎 {book.thumbsDown}
+                  </button>
+                </div>
+
                 <div
                   key={book.id}
                   className="book"
@@ -539,7 +569,6 @@ function BookGrid(props) {
                   />
                   {hoveredBook === book && showOverlay && (
                     <div className="book-overlay">
-                      {/* <p>genre - {book.genre.split("|").join(", ")}</p> */}
                       <p>
                         {Array.from(book.genre.split("|")).map(
                           (genre_str, index) => (
