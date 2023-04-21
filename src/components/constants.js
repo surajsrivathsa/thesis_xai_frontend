@@ -24057,6 +24057,8 @@ export const DUMMY_BOOKS = [
     panel_ratio: 1.0,
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
+    thumbsUp: 0,
+    thumbsDown: 0,
   },
   {
     id: 1,
@@ -24070,6 +24072,8 @@ export const DUMMY_BOOKS = [
     panel_ratio: 1.0,
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
+    thumbsUp: 0,
+    thumbsDown: 0,
   },
   {
     id: 2,
@@ -24083,6 +24087,8 @@ export const DUMMY_BOOKS = [
     panel_ratio: 1.0,
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
+    thumbsUp: 0,
+    thumbsDown: 0,
   },
 
   {
@@ -24097,6 +24103,8 @@ export const DUMMY_BOOKS = [
     panel_ratio: 1.0,
     comic_cover_img: 1.0,
     comic_cover_txt: 1.0,
+    thumbsUp: 0,
+    thumbsDown: 0,
   },
 ];
 

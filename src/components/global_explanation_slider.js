@@ -30,15 +30,27 @@ const INITIAL_STATE = {
   comic_cover_txt: 1.0,
 };
 
-const TOOLTIP_LST = {
-  genre_comb:
-    "Amount of Genres such as Action, Adventure, Humor, Romance, Spy etc in book",
-  gender: "Gender Ratio such as Male, Female characters in book",
-  panel_ratio: "Book Length and Ease of Reading the book",
+const FACET_NAME_TOOLTIP_LST = {
+  genre_comb: "Facet captures amount of Action, Humor, Mystery etc in book",
+  gender: "Gender Proportion such as Male, Female, Other characters in book",
+  panel_ratio: "Story Pace, Book Length and Ease of Reading the book",
   supersense:
-    "Coarse topics such as weather, adjectives, emotions that are talked about in the book",
-  comic_cover_img: "Themes from Important Images in book",
-  comic_cover_txt: "Important Images from Book",
+    "Coarse topics such as weather, adjectives, emotions that are talked about in the dialogues",
+  comic_cover_img: "Book cover image",
+  comic_cover_txt: "Textual topics extracted from book cover image",
+};
+
+const FACET_VALUE_TOOLTIP_LST = {
+  genre_comb: "More the value, More the emphasis of genre on search results",
+  gender: "More the value, More the emphasis of gender on search results",
+  panel_ratio:
+    "More the value, More the emphasis of story pace on search results",
+  supersense:
+    "More the value, More the emphasis of coarse themes on search results",
+  comic_cover_img:
+    "More the value, More the emphasis of cover image on search results",
+  comic_cover_txt:
+    "More the value, More the emphasis of cover image topics on search results",
 };
 
 const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
@@ -125,12 +137,12 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
 
   const columns = [
     {
-      field: "key",
-      headerName: "Facet",
+      field: "name",
+      headerName: "Facet Name",
       width: 260,
       renderCell: (params) => (
-        <Tooltip title={TOOLTIP_LST[params.row.key]}>
-          <span className="table-cell-trucate">{params.row.id}</span>
+        <Tooltip title={FACET_NAME_TOOLTIP_LST[params.row.id]}>
+          <span className="table-cell-trucate">{params.row.name}</span>
         </Tooltip>
       ),
     },
@@ -139,7 +151,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
       headerName: "Contribution towards Search",
       width: 270,
       renderCell: (params) => (
-        <Tooltip title={TOOLTIP_LST[params.row.id]}>
+        <Tooltip title={FACET_VALUE_TOOLTIP_LST[params.row.id]}>
           <Slider
             min={0}
             max={1}
@@ -177,7 +189,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
 
   const rows = inputKeys.map((k) => ({
     id: k,
-    key: FACET_NAME_OBJ[k],
+    name: FACET_NAME_OBJ[k],
     value: data[k],
   }));
   console.log("rows: ", rows);

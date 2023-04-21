@@ -1,4 +1,3 @@
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./BookGrid.css";
 import BarchartApp from "../components/global_explanation";
@@ -23,13 +22,14 @@ import ExplanationChips from "../components/global_explanation_relevance_feedbac
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Tooltip from "@material-ui/core/Tooltip";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
 const initial_chips = [
   {
     comic_no: 0,
-    book_title: "BBlue Bolt",
+    book_title: "Blue Bolt",
     genre: "Superhero",
     year: 1950,
     query_book: false,
@@ -37,27 +37,34 @@ const initial_chips = [
   },
 ];
 
-function HomeLogo() {
-  return (
-    <div className="home-logo">
-      <Link to="/">
-        <img
-          src="../../logo192.png"
-          alt="Home"
-          style={{ height: "50px", width: "50px" }}
-        />
-      </Link>
-    </div>
-  );
-}
+// function HomeLogo() {
+//   return (
+//     <div className="home-logo">
+//       <Link to="/">
+//         <img
+//           src="../../logo192.png"
+//           alt="Home"
+//           style={{ height: "50px", width: "50px" }}
+//         />
+//       </Link>
+//     </div>
+//   );
+// }
 
 function BookGrid(props) {
   const { state } = useLocation();
   let books_from_landing_page = null;
   let q = null;
   let { id } = useParams();
+
   useEffect(() => {
-    console.log("clicked path: ", `/search/${id}`);
+    console.log("state: ", state);
+    if (id == null) {
+      console.log("clicked path: ", "/search/1");
+    } else {
+      console.log("clicked path: ", `/search/${id}`);
+    }
+    // console.log("clicked path: ", `/search/${id}`);
   }, [id]);
 
   const [searchValue, setSearchValue] = useState("");
@@ -101,6 +108,10 @@ function BookGrid(props) {
   const [isEditable, setIsEditable] = useState(false);
   const [relevanceFeedbackExplanation, setRelevanceFeedbackExplanation] =
     useState(initial_chips);
+
+  // loading symbol
+  const [bookLoading, setBookLoading] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
 
   const handleMouseEnter = (book) => {
     timeoutRef.current = setTimeout(() => {
@@ -147,7 +158,7 @@ function BookGrid(props) {
         .catch((error) => {
           console.log(error);
         });
-    }, 2000);
+    }, 1500);
   };
 
   const handleMouseLeave = () => {
@@ -160,6 +171,13 @@ function BookGrid(props) {
   const handleClick = (book) => {
     // issue for query only if it is not already query book
     if (!book.query_book) {
+      // add the current path to the browser history state
+      // const currentPath = window.location.pathname;
+      // window.history.pushState({ previousPath: currentPath }, "");
+
+      // show spinner while loading
+      setSearchLoading((prevState) => true);
+
       // set selected query book as clicked book
       setCurrentQueryBook(book);
 
@@ -218,6 +236,9 @@ function BookGrid(props) {
               response.data[2].relevance_feedback_explanation
             );
 
+            // hide spinner after loading
+            setSearchLoading((prevState) => false);
+
             // adding results to session storage
             sessionStorage.setItem("books", JSON.stringify(response.data[0]));
             sessionStorage.setItem(
@@ -237,6 +258,8 @@ function BookGrid(props) {
           })
           .catch((error) => {
             throw error;
+            // hide spinner after loading
+            setSearchLoading(false);
           });
       } catch (error) {
         // handle rejected Promise/error/etc...
@@ -394,14 +417,39 @@ function BookGrid(props) {
     const updatedBooks = books.map((b) =>
       b.id === book.id ? { ...b, thumbsUp: b.thumbsUp + 1 } : b
     );
-    setBooks(updatedBooks);
+    //setBooks(updatedBooks);
   };
 
   const handleThumbsDown = (book) => {
     const updatedBooks = books.map((b) =>
-      b.id === book.id ? { ...b, thumbsDown: b.thumbsDown + 1 } : b
+      b.comic_no === book.comic_no ? { ...b, thumbsDown: b.thumbsDown + 1 } : b
     );
-    setBooks(updatedBooks);
+    //setBooks(updatedBooks);
+  };
+
+  const handleViewBook = async (book) => {
+    try {
+      console.log("view book ", book);
+      setBookLoading((prevState) => true);
+
+      const response = await axios.get(
+        `http://localhost:8000/view_comic_book/${book.comic_no}`,
+        {
+          responseType: "arraybuffer",
+        }
+      );
+
+      // Create a new Blob object from the response data
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      // Create a URL for the Blob object
+      const url = URL.createObjectURL(blob);
+      // Open a new tab with the PDF file
+      window.open(url);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setBookLoading((prevState) => false);
+    }
   };
 
   // added local storage to persist state on refresh
@@ -495,10 +543,17 @@ function BookGrid(props) {
   //detect refresh event and alert user
   useEffect(() => {
     window.onbeforeunload = function () {
+      // hide spinner after loading
+      setSearchLoading((prevState) => true);
       console.log(
-        "detected page refresh, initiaalizing states from session storage"
+        "detected page refresh, initializing states from session storage"
       );
 
+      setTimeout(() => {
+        /* Code to run after 4 seconds */
+        // hide spinner after loading
+        setSearchLoading((prevState) => false);
+      }, 4000);
       return true;
     };
 
@@ -522,104 +577,128 @@ function BookGrid(props) {
             <ExplanationChips inputData={relevanceFeedbackExplanation} />
           </section>
         </div>
-        <div className="book-grid">
-          {books &&
-            books.slice(0, 15).map((book) => (
-              <Link
-                key={book.id}
-                className="link"
-                to={{ pathname: `/search/${book.comic_no}` }}
-                state={{ book: book }}
-                exact="true"
-              >
-                <div className="thumbs">
-                  <button
-                    onClick={() => handleThumbsUp(book)}
-                    className="thumbs-up"
-                  >
-                    👍 {book.thumbsUp}
-                  </button>
-                  <button
-                    onClick={() => handleThumbsDown(book)}
-                    className="thumbs-down"
-                  >
-                    👎 {book.thumbsDown}
-                  </button>
-                </div>
-
-                <div
-                  key={book.id}
-                  className="book"
-                  onMouseEnter={() => handleMouseEnter(book)}
-                  onMouseLeave={() => handleMouseLeave()}
-                  onClick={() => handleClick(book)}
-                  style={
-                    currentQueryBook === book.id
-                      ? { border: "3px solid blue" }
-                      : {}
-                  }
-                >
-                  <img
-                    key={book.id}
-                    src={
-                      img_folderpath + "original_" + book.comic_no + "_1.jpeg"
-                    }
-                    alt={book.book_title}
-                    className="imageLarge"
-                    style={
-                      book.query_book === true
-                        ? { border: "7px solid blue" }
-                        : {}
-                    }
-                  />
-                  {hoveredBook === book && showOverlay && (
-                    <div className="book-overlay">
-                      <p>
-                        {Array.from(book.genre.split("|")).map(
-                          (genre_str, index) => (
-                            <Tooltip
-                              key={`${book.comic_no}-${index}`}
-                              title="genre"
-                            >
-                              <Chip
-                                key={`${book.comic_no}-${index}`}
-                                label={genre_str}
-                                color={"default"}
-                                style={{
-                                  margin: "5px",
-                                  flexWrap: "wrap",
-                                  fontSize: 18,
-                                }}
-                              />
-                            </Tooltip>
-                          )
-                        )}
-                      </p>
-                      <p>
-                        {FACET_KEYS.map((key) =>
-                          Array.from(localExplanation[3][key]).map(
-                            (facet_str, index) => (
-                              <Tooltip
-                                key={`${book.comic_no}-${index}`}
-                                title={key}
-                              >
-                                <Chip
-                                  key={`${book.comic_no}-${index}`}
-                                  label={facet_str}
-                                  color={"primary"}
-                                  style={{ margin: "5px", flexWrap: "wrap" }}
-                                />
-                              </Tooltip>
-                            )
-                          )
-                        )}
-                      </p>
+        {searchLoading ? (
+          <div className="search-progress-container">
+            <CircularProgress size={100} />
+          </div>
+        ) : (
+          <div className="book-grid">
+            {books &&
+              books.slice(0, 15).map((book) => (
+                <div key={book.comic_no}>
+                  {/* for thumbs up and down so that it doesnt route it to link */}
+                  <div className="thumbs">
+                    <button
+                      onClick={() => handleThumbsUp(book)}
+                      className="thumbs-up"
+                    >
+                      👍 {book.thumbsUp}
+                    </button>
+                    <div>
+                      <button
+                        onClick={() => handleViewBook(book)}
+                        disabled={bookLoading}
+                        className="view-book-button"
+                      >
+                        {bookLoading ? "Loading..." : "View Book"}
+                      </button>
                     </div>
-                  )}
+                    <button
+                      onClick={() => handleThumbsDown(book)}
+                      className="thumbs-down"
+                    >
+                      👎 {book.thumbsDown}
+                    </button>
+                  </div>
+
+                  <Link
+                    key={book.id}
+                    className="link"
+                    to={{ pathname: `/search/${book.comic_no}` }}
+                    state={{ book: book }}
+                    exact="true"
+                  >
+                    <div
+                      key={book.id}
+                      className="book"
+                      onMouseEnter={() => handleMouseEnter(book)}
+                      onMouseLeave={() => handleMouseLeave()}
+                      onClick={() => handleClick(book)}
+                      style={
+                        currentQueryBook === book.id
+                          ? { border: "3px solid blue" }
+                          : {}
+                      }
+                    >
+                      <img
+                        key={book.id}
+                        src={
+                          img_folderpath +
+                          "original_" +
+                          book.comic_no +
+                          "_1.jpeg"
+                        }
+                        alt={book.book_title}
+                        className="imageLarge"
+                        style={
+                          book.query_book === true
+                            ? { border: "7px solid blue" }
+                            : {}
+                        }
+                      />
+                      {hoveredBook === book && showOverlay && (
+                        <div className="book-overlay">
+                          <p>
+                            {Array.from(book.genre.split("|")).map(
+                              (genre_str, index) => (
+                                <Tooltip
+                                  key={`${book.comic_no}-${index}`}
+                                  title="genre"
+                                >
+                                  <Chip
+                                    key={`${book.comic_no}-${index}`}
+                                    label={genre_str}
+                                    color={"default"}
+                                    style={{
+                                      margin: "5px",
+                                      flexWrap: "wrap",
+                                      fontSize: 18,
+                                    }}
+                                  />
+                                </Tooltip>
+                              )
+                            )}
+                          </p>
+                          <p>
+                            {FACET_KEYS.map((key) =>
+                              Array.from(localExplanation[3][key]).map(
+                                (facet_str, index) => (
+                                  <Tooltip
+                                    key={`${book.comic_no}-${index}`}
+                                    title={key}
+                                  >
+                                    <Chip
+                                      key={`${book.comic_no}-${index}`}
+                                      label={facet_str}
+                                      color={"primary"}
+                                      style={{
+                                        margin: "5px",
+                                        flexWrap: "wrap",
+                                      }}
+                                    />
+                                  </Tooltip>
+                                )
+                              )
+                            )}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
                 </div>
-              </Link>
-            ))}
-        </div>
+              ))}
+          </div>
+        )}
         <div className="side-bar-container">
           <div>
             {currentQueryBook && (

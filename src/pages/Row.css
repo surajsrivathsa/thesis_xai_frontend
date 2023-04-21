@@ -60,8 +60,8 @@
 
 .imageLarge {
   margin: 1em 5px 17px 0;
-  max-height: 370px;
-  max-width: 70%;
+  width: 65%;
+  max-height: 450px;
   transition: transform 450ms;
   border-radius: 5px;
   cursor: pointer;

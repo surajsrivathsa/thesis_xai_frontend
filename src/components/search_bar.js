@@ -106,18 +106,19 @@ const SearchContainer = (props) => {
   const suggestMatchedBookTitle = (book, typed_query) => {
     // console.log("type" in book);
     // console.log(book, typed_query, "type" in book);
-    if ("type" in book) {
-      return book;
-    } else if (
+    if (
       typeof typed_query === "string" &&
-      book.book_title.toLowerCase().includes(typed_query.toLowerCase())
+      (book.book_title.toLowerCase().includes(typed_query.toLowerCase()) ||
+        book.genre.toLowerCase().includes(typed_query.toLowerCase()))
     ) {
       return {
         type: "book",
-        text: book.book_title,
+        text: book.book_title + "   -   " + book.genre,
         book_title: book.book_title,
         comic_no: book.comic_no,
       };
+    } else if ("type" in book) {
+      return book;
     } else {
       return { type: "book", text: "", book_title: null, comic_no: null };
     }
@@ -174,40 +175,39 @@ const SearchContainer = (props) => {
     var typed_query = e;
     let suggestedQueryResults = [];
 
-    if (typeof e === "string") {
-      var freeTextQueryDict = {
-        type: "free text",
-        text: e,
-        book_title: null,
-        comic_no: null,
-      };
-    } else {
-      var freeTextQueryDict = e;
-    }
+    // commented free text query
+    // if (typeof e === "string") {
+    //   var freeTextQueryDict = {
+    //     type: "free text",
+    //     text: e,
+    //     book_title: null,
+    //     comic_no: null,
+    //   };
+    // } else {
+    //   var freeTextQueryDict = e;
+    // }
 
     // console.log("e ", e);
-    suggestedQueryResults.push(freeTextQueryDict);
+    // suggestedQueryResults.push(freeTextQueryDict);
 
     SEARCHBAR_BOOKS.map((book) => {
       var matchedBookTitleDict = suggestMatchedBookTitle(book, typed_query);
-      var matchedBookGenreDict = suggestMatchedBookGenre(book, typed_query);
-      var matchedBookCharacterList = suggestMatchedBookCharacter(
-        book,
-        typed_query
-      );
+      var matchedBookGenreDict = {}; //suggestMatchedBookGenre(book, typed_query); commented as genre mixed with book title
+      var matchedBookCharacterList = {}; // suggestMatchedBookCharacter(book,typed_query); commented as not implements, character names not present
+
       if (matchedBookTitleDict.comic_no !== null) {
         suggestedQueryResults.push(matchedBookTitleDict);
       }
 
-      if (matchedBookGenreDict.comic_no !== null) {
-        suggestedQueryResults.push(matchedBookGenreDict);
-      }
+      // if (matchedBookGenreDict.comic_no !== null) {
+      //   suggestedQueryResults.push(matchedBookGenreDict);
+      // }
 
-      matchedBookCharacterList.map((matched_obj) => {
-        if (matched_obj.comic_no !== null) {
-          suggestedQueryResults.push(matched_obj);
-        }
-      });
+      // matchedBookCharacterList.map((matched_obj) => {
+      //   if (matched_obj.comic_no !== null) {
+      //     suggestedQueryResults.push(matched_obj);
+      //   }
+      // });
 
       return;
     });

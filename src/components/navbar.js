@@ -64,7 +64,8 @@ function NavBar() {
           let searchResults = response.data[0];
           console.log("clicked book from landing page: ", { ...queryBook });
           console.log("searchResults in promise: ", searchResults);
-          navigate(`/search/${book.comic_no}`, {
+          console.log("navigate path: ", `/search/${queryBook.comic_no}`);
+          navigate(`/search/${queryBook.comic_no}`, {
             state: {
               books: [...searchResults],
               query: {

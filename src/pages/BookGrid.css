@@ -156,6 +156,7 @@
     background-color: white;
     padding: 5px;
     width: 25%;
+    height: 100%;
     position: absolute;
     right: 0;
     top: 0;
@@ -334,3 +335,31 @@
 .thumbs-down {
   color: red;
 }
+
+.view-book-button {
+  background-color: #731e88; /* Purple */
+  border: none;
+  color: white;
+  padding: 8px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 2px 2px;
+  cursor: pointer;
+  border-radius: 16px;
+}
+
+.search-progress-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
