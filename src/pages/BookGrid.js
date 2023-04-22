@@ -29,8 +29,8 @@ const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL 
 const initial_chips = [
   {
     comic_no: 0,
-    book_title: "Blue Bolt",
-    genre: "Superhero",
+    book_title: "none of the books",
+    genre: "No Genre",
     year: 1950,
     query_book: false,
     explanation_lst: ["No Themes Found"],
@@ -60,9 +60,9 @@ function BookGrid(props) {
   useEffect(() => {
     console.log("state: ", state);
     if (id == null) {
-      console.log("clicked path: ", "/search/1");
+      console.log("clicked path bookgrid : ", "/search/1");
     } else {
-      console.log("clicked path: ", `/search/${id}`);
+      console.log("clicked path bookgrid : ", `/search/${id}`);
     }
     // console.log("clicked path: ", `/search/${id}`);
   }, [id]);
@@ -517,7 +517,7 @@ function BookGrid(props) {
       console.log("states refreshed");
     }
     // state = null;
-  }, []);
+  }, [state]);
 
   useEffect(() => {
     if (
