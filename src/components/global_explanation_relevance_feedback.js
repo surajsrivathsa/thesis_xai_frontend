@@ -51,7 +51,8 @@ function ExplanationChips(props) {
     <div className={classes.root}>
       {queryBooks.length > 0 ? (
         <h3 className={classes.header}>
-          Because you were interested in{" "}
+          Similar themes between current search results and your previous
+          interested books{" "}
           {allBookTitles.map((title, index) => (
             <span key={title}>
               {title}
@@ -61,7 +62,8 @@ function ExplanationChips(props) {
         </h3>
       ) : (
         <h3 className={classes.header}>
-          Because you were interested in{" "}
+          Similar themes between current search results and your previous
+          interested books{" "}
           {allBookTitles.map((title, index) => (
             <span key={title}>
               {title}
