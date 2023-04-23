@@ -179,7 +179,9 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
             inputProps={{ "aria-label": "controlled" }}
             sx={{
               "& .MuiSwitch-thumb": { color: "#42a5f5" },
-              "& .MuiSwitch-track": { color: "#42a5f5" },
+              "& .MuiSwitch-track": {
+                color: isEditable ? "#42a5f5" : "#bcbcbc",
+              },
             }}
           />
         </div>
@@ -202,6 +204,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
         autoHeight={true}
         disableColumnMenu={true}
         onStateChange={conditionalGlobalExplanationUpdateFromBackend}
+        sx={{ color: "whitesmoke" }}
       />
     </div>
   );

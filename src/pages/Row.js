@@ -82,24 +82,13 @@ function Row({ category, bookList, isColumn }) {
           ? data.map((book_obj) => {
               const book = book_obj;
               return (
-                <div
-                  key={book.id}
-                  className="link"
-                  onClick={() => generateGrid(book)}
-                >
-                  {/* <Link
-                    key={book.id}
-                    to={{
-                      pathname: `search/${book.comic_no}`,
-                      state: { book },
-                    }}
-                    exact="true"
-                  > */}
+                <div key={book.id} className="link">
                   <img
                     key={book.id}
                     className="imageLarge"
                     src={book.backdrop_path}
                     alt={book.book_title}
+                    onClick={() => generateGrid(book)}
                   />
                   {/* </Link> */}
                 </div>

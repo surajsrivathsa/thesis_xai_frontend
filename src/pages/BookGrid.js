@@ -29,7 +29,7 @@ const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL 
 const initial_chips = [
   {
     comic_no: 0,
-    book_title: "none of the books",
+    book_title: ", could not determine your interests for this search",
     genre: "No Genre",
     year: 1950,
     query_book: false,
@@ -747,7 +747,7 @@ function BookGrid(props) {
             />
           </div>
 
-          {/* <div className="global-explanation-chips">
+          {/* <div className="global-explanation-chips"> 
               <section className="content">
                 <ExplanationChips inputData={relevanceFeedbackExplanation} />
               </section>
