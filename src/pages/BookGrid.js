@@ -169,8 +169,8 @@ function BookGrid(props) {
   };
 
   const handleClick = (book) => {
-    // issue for query only if it is not already query book
-    if (!book.query_book) {
+    // issue for query only if it is not already query book if (!book.query_book)
+    if (book.comic_no !== null) {
       // add the current path to the browser history state
       // const currentPath = window.location.pathname;
       // window.history.pushState({ previousPath: currentPath }, "");
@@ -414,17 +414,17 @@ function BookGrid(props) {
 
   // handle thunbs up and thumbs down
   const handleThumbsUp = (book) => {
-    const updatedBooks = books.map((b) =>
-      b.id === book.id ? { ...b, thumbsUp: b.thumbsUp + 1 } : b
+    const updatedBooks = [...books].map((b) =>
+      b.comic_no === book.comic_no ? { ...b, thumbsUp: 1 } : b
     );
-    //setBooks(updatedBooks);
+    setBooks([...updatedBooks]);
   };
 
   const handleThumbsDown = (book) => {
-    const updatedBooks = books.map((b) =>
-      b.comic_no === book.comic_no ? { ...b, thumbsDown: b.thumbsDown + 1 } : b
+    const updatedBooks = [...books].map((b) =>
+      b.comic_no === book.comic_no ? { ...b, thumbsDown: 1 } : b
     );
-    //setBooks(updatedBooks);
+    setBooks([...updatedBooks]);
   };
 
   const handleViewBook = async (book) => {
@@ -585,32 +585,7 @@ function BookGrid(props) {
           <div className="book-grid">
             {books &&
               books.slice(0, 15).map((book) => (
-                <div key={book.comic_no}>
-                  {/* for thumbs up and down so that it doesnt route it to link */}
-                  <div className="thumbs">
-                    <button
-                      onClick={() => handleThumbsUp(book)}
-                      className="thumbs-up"
-                    >
-                      👍 {book.thumbsUp}
-                    </button>
-                    <div>
-                      <button
-                        onClick={() => handleViewBook(book)}
-                        disabled={bookLoading}
-                        className="view-book-button"
-                      >
-                        {bookLoading ? "Loading..." : "View Book"}
-                      </button>
-                    </div>
-                    <button
-                      onClick={() => handleThumbsDown(book)}
-                      className="thumbs-down"
-                    >
-                      👎 {book.thumbsDown}
-                    </button>
-                  </div>
-
+                <div key={book.comic_no + "-" + "grid"}>
                   <Link
                     key={book.id}
                     className="link"
@@ -648,6 +623,23 @@ function BookGrid(props) {
                       />
                       {hoveredBook === book && showOverlay && (
                         <div className="book-overlay">
+                          <p>
+                            <Tooltip
+                              key={`${book.comic_no}+"_iding`}
+                              title="book id"
+                            >
+                              <Chip
+                                key={`${book.comic_no}+"_id`}
+                                label={book.comic_no}
+                                color={"default"}
+                                style={{
+                                  margin: "5px",
+                                  flexWrap: "wrap",
+                                  fontSize: 20,
+                                }}
+                              />
+                            </Tooltip>
+                          </p>
                           <p>
                             {Array.from(book.genre.split("|")).map(
                               (genre_str, index) => (
@@ -695,52 +687,78 @@ function BookGrid(props) {
                       )}
                     </div>
                   </Link>
+                  {/* for thumbs up and down so that it doesnt route it to link */}
+                  <div className="thumbs">
+                    {/* <button
+                      onClick={() => handleThumbsUp(book)}
+                      className="thumbs-up"
+                      key={book.comic_no + "-" + "thumbs_up"}
+                    >
+                      👍 {book.thumbsUp}
+                    </button> */}
+                    <div key={book.comic_no + "-" + "view_book"}>
+                      <button
+                        onClick={() => handleViewBook(book)}
+                        disabled={bookLoading}
+                        className="view-book-button"
+                      >
+                        {bookLoading ? "Loading Book..." : "View Book"}
+                      </button>
+                    </div>
+                    {/* <button
+                      onClick={() => handleThumbsDown(book)}
+                      className="thumbs-down"
+                      key={book.comic_no + "-" + "thumbs_down"}
+                    >
+                      👎 {book.thumbsDown}
+                    </button> */}
+                  </div>
                 </div>
               ))}
           </div>
         )}
-        <div className="side-bar-container">
-          <div>
-            {currentQueryBook && (
-              <p style={{ color: "rgb(255, 99, 132)", fontSize: 18 }}>
-                Your Selection: {currentQueryBook.book_title} -{" "}
-                {currentQueryBook.comic_no}
-              </p>
-            )}
-            {hoveredBook && (
-              <p style={{ color: "rgb(53, 162, 235)", fontSize: 18 }}>
-                Your Interest: {hoveredBook.book_title} - {hoveredBook.comic_no}
-              </p>
-            )}
-          </div>
+      </div>
+      <div className="side-bar-container">
+        <div>
+          {currentQueryBook && (
+            <p style={{ color: "rgb(255, 99, 132)", fontSize: 18 }}>
+              Your Selection: {currentQueryBook.book_title} -{" "}
+              {currentQueryBook.comic_no}
+            </p>
+          )}
+          {hoveredBook && (
+            <p style={{ color: "rgb(53, 162, 235)", fontSize: 18 }}>
+              Your Interest: {hoveredBook.book_title} - {hoveredBook.comic_no}
+            </p>
+          )}
+        </div>
 
-          {/* <div className="global-explanation-container">
+        {/* <div className="global-explanation-container">
             <BarchartApp global_explanations_lst={globalExplanation} />
           </div> */}
 
-          <div className="global-explanation-container">
-            {/* <BarchartApp global_explanations_lst={globalExplanation} /> */}
-            <h3>Facet Contribution Towards Search</h3>
-            <div className="global-explanation-slider">
-              <GlobalExplanationSliderGrid
-                inputData={globalExplanation[1]}
-                onSubmit={handleGlobalExplanationSliderSubmit}
-              />
-            </div>
+        <div className="global-explanation-container">
+          {/* <BarchartApp global_explanations_lst={globalExplanation} /> */}
+          <h3>Facet Contribution Towards Search</h3>
+          <div className="global-explanation-slider">
+            <GlobalExplanationSliderGrid
+              inputData={globalExplanation[1]}
+              onSubmit={handleGlobalExplanationSliderSubmit}
+            />
+          </div>
 
-            {/* <div className="global-explanation-chips">
+          {/* <div className="global-explanation-chips">
               <section className="content">
                 <ExplanationChips inputData={relevanceFeedbackExplanation} />
               </section>
             </div> */}
-          </div>
+        </div>
 
-          <div className="local-explanation-container">
-            <StoryPaceExplanation story_pace={localExplanation} />
-            {/* <div>
+        <div className="local-explanation-container">
+          <StoryPaceExplanation story_pace={localExplanation} />
+          {/* <div>
               <FacetKeywordsComp facets={localExplanation} />
             </div> */}
-          </div>
         </div>
       </div>
     </div>
