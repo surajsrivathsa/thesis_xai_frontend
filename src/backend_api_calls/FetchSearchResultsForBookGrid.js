@@ -30,7 +30,7 @@ function FetchSearchResultsforBookGrid(
   return new Promise((resolve, reject) => {
     axios
       .post(
-        "http://localhost:8000/book_search_no_reranking?b_id=" +
+        "http://localhost:8000/book_search?b_id=" +
           parseInt(comic_no) +
           "&generate_fake_clicks=" +
           generate_fake_clicks,
