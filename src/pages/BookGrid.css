@@ -349,3 +349,63 @@
 }
 
 
+/* Modal css*/
+/* Modal */
+/* .modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  max-width: 90%;
+  max-height: 90%;
+  overflow-y: auto;
+}
+
+/* Backdrop */
+/* .backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 9998;
+  background-color: rgba(0, 0, 0, 0.5);
+} */
+
+/* Fade effect */
+/* .fade-enter {
+  opacity: 0;
+} */
+
+/* .fade-enter-active {
+  opacity: 1;
+  transition: opacity 300ms ease-in-out;
+} */
+
+/* .fade-exit {
+  opacity: 1;
+} */
+
+/* .fade-exit-active {
+  opacity: 0;
+  transition: opacity 300ms ease-in-out;
+} */
+
+.compare-books-box {
+  position: 'relative';
+  top: '50%';
+  left: '50%';
+  transform: 'translate(-50%, -50%)';
+  width: 400;
+  background-color: 'background.paper';
+  border: '2px solid #000';
+  box-shadow: 24;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}

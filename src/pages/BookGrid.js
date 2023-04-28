@@ -7,6 +7,7 @@ import {
   StoryPaceExplanation,
 } from "../components/local_explanation";
 import SearchContainer from "../components/search_bar";
+import CompareBooks from "../components/CompareBooks";
 import {
   SEARCHBAR_BOOKS,
   DUMMY_BOOKS,
@@ -23,6 +24,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Tooltip from "@material-ui/core/Tooltip";
 import CircularProgress from "@mui/material/CircularProgress";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { Modal, Backdrop, Fade, Box } from "@mui/material";
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
@@ -112,6 +116,12 @@ function BookGrid(props) {
   // loading symbol
   const [bookLoading, setBookLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [compareBooksCheckedList, setCompareBooksCheckedList] = React.useState(
+    []
+  );
+  const [compareBookLoading, setCompareBookLoading] = useState(false);
+  const [openBackdrop, setOpenBackdrop] = useState(false);
+  const [comparedBookExplanations, setComparedBookExplanations] = useState({});
 
   const handleMouseEnter = (book) => {
     timeoutRef.current = setTimeout(() => {
@@ -180,6 +190,8 @@ function BookGrid(props) {
 
       // set selected query book as clicked book
       setCurrentQueryBook(book);
+
+      setCompareBooksCheckedList((prevList) => [book]);
 
       // find uninterested books which were not hovered by user
       var unInterestedBookList = books
@@ -254,6 +266,10 @@ function BookGrid(props) {
             sessionStorage.setItem(
               "relevanceFeedbackExplanation",
               JSON.stringify(response.data[2].relevance_feedback_explanation)
+            );
+            sessionStorage.setItem(
+              "compareBooksCheckedList",
+              JSON.stringify([book])
             );
           })
           .catch((error) => {
@@ -368,7 +384,7 @@ function BookGrid(props) {
 
     if (searchBarQuery.type === "book") {
       // set selected query book as clicked book
-      setCurrentQueryBook({
+      var tmp_query_book = {
         id: searchBarQuery.id,
         comic_no: searchBarQuery.comic_no,
         book_title: searchBarQuery.book_title,
@@ -380,7 +396,10 @@ function BookGrid(props) {
         panel_ratio: 1.0,
         comic_cover_img: 1.0,
         comic_cover_txt: 1.0,
-      });
+      };
+
+      setCurrentQueryBook(tmp_query_book);
+      setCompareBooksCheckedList((prevList) => [tmp_query_book]);
     }
   };
 
@@ -452,6 +471,59 @@ function BookGrid(props) {
     }
   };
 
+  const addToCompareBooks = (book, checked) => {
+    //setChecked(event.target.checked);
+    if (!checked) {
+      setCompareBooksCheckedList((prevList) => [
+        ...prevList.filter((obj) => obj.comic_no !== book.comic_no),
+      ]);
+    } else {
+      setCompareBooksCheckedList((prevList) => [...prevList, book]);
+    }
+  };
+
+  const handleCompareBooks = async (compareBooksCheckedList) => {
+    try {
+      console.log(
+        "sending comparision query to backend ",
+        compareBooksCheckedList
+      );
+      setCompareBookLoading((prevState) => true);
+
+      const response = await axios.post(
+        "http://localhost:8000/compare_books",
+        {
+          selected_book_lst: compareBooksCheckedList,
+        },
+        {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json;charset=UTF-8",
+            "Access-Control-Allow-Credentials": true,
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods":
+              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
+          },
+        }
+      );
+
+      // console.log("comparision books response from backend: ", response.data);
+      setComparedBookExplanations(() => response.data);
+    } catch (error) {
+      console.error(error);
+    } finally {
+    }
+  };
+
+  const handleOpenBackdrop = () => {
+    setOpenBackdrop(true);
+    handleCompareBooks(compareBooksCheckedList);
+  };
+
+  const handleCloseBackdrop = () => {
+    setOpenBackdrop(false);
+  };
+
   // added local storage to persist state on refresh
   useEffect(() => {
     if (state && state.books && state.query) {
@@ -463,6 +535,7 @@ function BookGrid(props) {
       );
       setBooks(() => [...books_from_landing_page]);
       setCurrentQueryBook(() => q);
+      setCompareBooksCheckedList((prevList) => [q]);
 
       // adding results to session storage
       sessionStorage.setItem("books", JSON.stringify(books_from_landing_page));
@@ -514,6 +587,9 @@ function BookGrid(props) {
       setRelevanceFeedbackExplanation(() =>
         JSON.parse(sessionStorage.getItem("relevanceFeedbackExplanation"))
       );
+      setCompareBooksCheckedList(() =>
+        JSON.parse(sessionStorage.getItem("compareBooksCheckedList"))
+      );
       console.log("states refreshed");
     }
     // state = null;
@@ -562,6 +638,21 @@ function BookGrid(props) {
       window.onbeforeunload = null;
     };
   }, []);
+
+  useEffect(() => {
+    console.log("compare books: ", compareBooksCheckedList);
+  }, [compareBooksCheckedList]);
+
+  useEffect(() => {
+    console.log("open backdrop: ", openBackdrop);
+  }, [openBackdrop]);
+
+  useEffect(() => {
+    console.log(
+      "compare books response from backend: ",
+      comparedBookExplanations
+    );
+  }, [comparedBookExplanations]);
 
   return (
     <div className="app-container">
@@ -705,6 +796,28 @@ function BookGrid(props) {
                         {bookLoading ? "Loading Book..." : "View Book"}
                       </button>
                     </div>
+                    {/* <Checkbox
+                      checked={false}
+                      onChange={(event, book) =>
+                        addToCompareBooks(book, event.target.checked)
+                      }
+                      inputProps={{ "aria-label": "controlled" }}
+                      key={book.comic_no + "-" + "checkbox_compare"}
+                    /> */}
+
+                    <div key={book.comic_no + "-" + "checkbox_compare"}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={compareBooksCheckedList.includes(book)}
+                            onChange={(event) =>
+                              addToCompareBooks(book, event.target.checked)
+                            }
+                          />
+                        }
+                        label={`${book.book_title}`}
+                      />
+                    </div>
                     {/* <button
                       onClick={() => handleThumbsDown(book)}
                       className="thumbs-down"
@@ -717,7 +830,28 @@ function BookGrid(props) {
               ))}
           </div>
         )}
+
+        <div>
+          <Modal
+            open={openBackdrop}
+            onClose={handleCloseBackdrop}
+            disableEnforceFocus
+            slots={{ backdrop: Backdrop }}
+            slotProps={{
+              backdrop: {
+                timeout: 500,
+              },
+            }}
+            BackdropComponent={Backdrop}
+            TransitionComponent={Fade}
+          >
+            <Box className="compare-books-box ">
+              <CompareBooks data={comparedBookExplanations} />
+            </Box>
+          </Modal>
+        </div>
       </div>
+
       <div className="side-bar-container">
         <div>
           {currentQueryBook && (
@@ -731,6 +865,12 @@ function BookGrid(props) {
               Your Interest: {hoveredBook.book_title} - {hoveredBook.comic_no}
             </p>
           )}
+        </div>
+
+        <div key={"compare_books"}>
+          <button onClick={handleOpenBackdrop} className="view-book-button">
+            Compare Books
+          </button>
         </div>
 
         {/* <div className="global-explanation-container">

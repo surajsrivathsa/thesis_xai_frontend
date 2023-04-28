@@ -1,0 +1,35 @@
+/* .cross-tab {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.cross-tab th,
+.cross-tab td {
+  border: 1px solid #ccc;
+  padding: 8px;
+  text-align: center;
+}
+
+.cross-tab th {
+  background-color: #f2f2f2;
+}
+
+.cross-tab tbody tr:nth-child(2n) {
+  background-color: #f2f2f2;
+} */
+
+.cross-tab {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.cross-tab th,
+.cross-tab td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.cross-tab th {
+  background-color: #f2f2f2;
+}
