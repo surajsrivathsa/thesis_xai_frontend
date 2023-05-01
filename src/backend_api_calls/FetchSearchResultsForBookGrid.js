@@ -4,6 +4,7 @@ import {
   DUMMY_BOOKS,
   DEFAULT_LOCAL_EXPLANATION,
   FACET_KEYS,
+  SYSTEMS_TO_API_ENDPOINT_MAPPING,
 } from "../components/constants";
 
 function FetchSearchResultsforBookGrid(
@@ -27,10 +28,14 @@ function FetchSearchResultsforBookGrid(
   );
   console.log("here");
   var searchResults = DUMMY_BOOKS;
+
+  var system_type = JSON.parse(sessionStorage.getItem("system_type"));
+  var endpointAPI = SYSTEMS_TO_API_ENDPOINT_MAPPING[system_type]["book_grid"];
+
   return new Promise((resolve, reject) => {
     axios
       .post(
-        "http://localhost:8000/book_search?b_id=" +
+        `${endpointAPI}` +
           parseInt(comic_no) +
           "&generate_fake_clicks=" +
           generate_fake_clicks,

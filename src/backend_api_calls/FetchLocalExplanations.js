@@ -1,44 +1,37 @@
 import axios from "axios";
-import {
-  SEARCHBAR_BOOKS,
-  DUMMY_BOOKS,
-  DEFAULT_LOCAL_EXPLANATION,
-  FACET_KEYS,
-} from "../components/constants";
+import { SYSTEMS_TO_API_ENDPOINT_MAPPING } from "../components/constants";
 
-function FetchLocalExplanations(clickedQuery, isEditable, userFacetWeights) {
-  var searchBarQuery = { ...clickedQuery.clickedBook };
-  console.log("clicked query inside fetch: ", searchBarQuery);
-  var searchResults = DUMMY_BOOKS;
+function FetchLocalExplanations(localExplanationInfoJSON) {
+  console.log("localExplanationInfoJSON: ", localExplanationInfoJSON);
+  var localExplanation = [];
+  var system_type = JSON.parse(sessionStorage.getItem("system_type"));
+  var endpointAPI =
+    SYSTEMS_TO_API_ENDPOINT_MAPPING[system_type]["local_explanation"];
   return new Promise((resolve, reject) => {
     axios
-      .post(
-        "http://localhost:8000/book_search_with_searchbar_inputs",
-        {
-          searchbar_query: searchBarQuery,
-          generate_fake_clicks: isEditable,
-          input_feature_importance_dict: userFacetWeights,
+      .post(`${endpointAPI}`, localExplanationInfoJSON, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json;charset=UTF-8",
+          "Access-Control-Allow-Credentials": true,
         },
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json;charset=UTF-8",
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods":
-              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-          },
-        }
-      ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
+      })
       .then((response) => {
-        searchResults = [...response.data[0]];
-        console.log("response SERP from api: ", searchResults);
-        console.log("all response: ", response);
-        resolve(response);
+        console.log("backend response story pace: ", response);
+        localExplanation = [
+          response.data.story_pace[0],
+          response.data.story_pace[1],
+          response.data.w5_h1_facets[0],
+          response.data.w5_h1_facets[1],
+          response.data.lrp_genre[0],
+          response.data.lrp_genre[1],
+        ];
+        console.log("New Local Explanation: ", localExplanation);
+        resolve(localExplanation);
       })
       .catch((error) => {
-        console.log("error in landing page to grid search: ", error);
-        reject(searchResults);
+        console.log(error);
+        reject(localExplanation);
       });
   });
 }

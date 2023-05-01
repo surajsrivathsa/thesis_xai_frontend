@@ -1,23 +1,17 @@
 import axios from "axios";
-import {
-  SEARCHBAR_BOOKS,
-  DUMMY_BOOKS,
-  DEFAULT_LOCAL_EXPLANATION,
-  FACET_KEYS,
-} from "../components/constants";
+import { SYSTEMS_TO_API_ENDPOINT_MAPPING } from "../components/constants";
 
-function FetchCompareExplanations(clickedQuery, isEditable, userFacetWeights) {
-  var searchBarQuery = { ...clickedQuery.clickedBook };
-  console.log("clicked query inside fetch: ", searchBarQuery);
-  var searchResults = DUMMY_BOOKS;
+function FetchCompareExplanations(compareBooksCheckedList) {
+  console.log("comparision books : ", compareBooksCheckedList);
+  var comparedExplanations = null;
+  var system_type = JSON.parse(sessionStorage.getItem("system_type"));
+  var endpointAPI = SYSTEMS_TO_API_ENDPOINT_MAPPING[system_type]["comparision"];
   return new Promise((resolve, reject) => {
     axios
       .post(
-        "http://localhost:8000/book_search_with_searchbar_inputs",
+        `${endpointAPI}`,
         {
-          searchbar_query: searchBarQuery,
-          generate_fake_clicks: isEditable,
-          input_feature_importance_dict: userFacetWeights,
+          selected_book_lst: compareBooksCheckedList,
         },
         {
           headers: {
@@ -31,14 +25,13 @@ function FetchCompareExplanations(clickedQuery, isEditable, userFacetWeights) {
         }
       ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
       .then((response) => {
-        searchResults = [...response.data[0]];
-        console.log("response SERP from api: ", searchResults);
-        console.log("all response: ", response);
+        comparedExplanations = [...response.data];
+        console.log("compared explanations : ", comparedExplanations);
         resolve(response);
       })
       .catch((error) => {
-        console.log("error in landing page to grid search: ", error);
-        reject(searchResults);
+        console.log("error in comparing explanations: ", error);
+        reject(comparedExplanations);
       });
   });
 }

@@ -3,6 +3,7 @@ import "./navbar.css";
 import { useParams, Link, useLocation, useNavigate } from "react-router-dom";
 import SearchContainer from "../components/search_bar";
 import "react-widgets/styles.css";
+import { MenuItem, Select } from "@mui/material";
 import FetchSearchResultsforSearchbarQuery from "../backend_api_calls/FetchSearchResultsforSearchbarQuery";
 
 function HomeLogo() {
@@ -22,6 +23,16 @@ function HomeLogo() {
 function NavBar() {
   const navigate = useNavigate();
   const [showAbout, setShowAbout] = useState(false);
+  const [selectedSystem, setSelectedSystem] = useState("Wayne"); // initialize state with default value
+
+  const handleSystemChange = (event) => {
+    setSelectedSystem(event.target.value);
+  };
+
+  useEffect(() => {
+    console.log("selected system: ", selectedSystem);
+    sessionStorage.setItem("system_type", JSON.stringify(selectedSystem));
+  }, [selectedSystem]);
 
   function generateGrid(book) {
     //event.preventDefault();
@@ -99,6 +110,22 @@ function NavBar() {
             style={{ height: "55px", width: "55px" }}
           />
         </Link>
+      </div>
+      <div className="dropdown-container">
+        <label htmlFor="dropdown">Select an option:</label>
+        <Select
+          labelId="dropdown-label"
+          id="dropdown"
+          value={selectedSystem}
+          onChange={handleSystemChange}
+          label="Dropdown"
+        >
+          <MenuItem value="Wayne">Wayne</MenuItem>
+          <MenuItem value="Stark">Stark</MenuItem>
+          <MenuItem value="Croft">Croft</MenuItem>
+          <MenuItem value="Butcher">Butcher</MenuItem>
+          <MenuItem value="Gray">Gray</MenuItem>
+        </Select>
       </div>
       <div className="search-container">
         <SearchContainer getUserInputsFromSearchBar={generateGrid} />

@@ -20,6 +20,8 @@ import GlobalExplanationSliderGrid from "../components/global_explanation_slider
 import FetchSearchResultsforSearchbarQuery from "../backend_api_calls/FetchSearchResultsforSearchbarQuery";
 import FetchSearchResultsForBookGrid from "../backend_api_calls/FetchSearchResultsForBookGrid";
 import FetchComicPDF from "../backend_api_calls/FetchComicPDF";
+import FetchCompareExplanations from "../backend_api_calls/FetchCompareExplanations";
+import FetchLocalExplanations from "../backend_api_calls/FetchLocalExplanations";
 import ExplanationChips from "../components/global_explanation_relevance_feedback";
 import AllChipsWithBox from "../components/global_explanation_relevance_feedback_new";
 import { makeStyles } from "@material-ui/core/styles";
@@ -143,32 +145,17 @@ function BookGrid(props) {
       };
       console.log("localExplanationInfoJSON: ", localExplanationInfoJSON);
 
-      axios
-        .post(
-          "http://localhost:8000/local_explanation",
-          localExplanationInfoJSON,
-          {
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json;charset=UTF-8",
-              "Access-Control-Allow-Credentials": true,
-            },
-          }
-        )
+      let fetchLocalExplanationsPromise = FetchLocalExplanations(
+        localExplanationInfoJSON
+      );
+
+      fetchLocalExplanationsPromise
         .then((response) => {
-          console.log("backend response story pace: ", response);
-          setLocalExplanation([
-            response.data.story_pace[0],
-            response.data.story_pace[1],
-            response.data.w5_h1_facets[0],
-            response.data.w5_h1_facets[1],
-            response.data.lrp_genre[0],
-            response.data.lrp_genre[1],
-          ]);
-          console.log("New Local Explanation: ", localExplanation);
+          setLocalExplanation(response);
+          console.log("retrieved local explanation");
         })
         .catch((error) => {
-          console.log(error);
+          console.log("error while etrieving local explantions: ", error);
         });
     }, 1500);
   };
@@ -453,10 +440,16 @@ function BookGrid(props) {
     setBookLoading((prevState) => true);
 
     try {
-      let viewPDFBookPromise = FetchComicPDF((viewBook = book));
+      let viewPDFBookPromise = FetchComicPDF(book);
 
       viewPDFBookPromise
         .then((response) => {
+          // Create a new Blob object from the response data
+          const blob = new Blob([response.data], { type: "application/pdf" });
+          // Create a URL for the Blob object
+          const url = URL.createObjectURL(blob);
+          console.log("url pdf : ", url);
+
           // Open a new tab with the PDF file
           window.open(url);
         })
@@ -502,28 +495,21 @@ function BookGrid(props) {
       );
       setCompareBookLoading((prevState) => true);
 
-      const response = await axios.post(
-        "http://localhost:8000/compare_books",
-        {
-          selected_book_lst: compareBooksCheckedList,
-        },
-        {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json;charset=UTF-8",
-            "Access-Control-Allow-Credentials": true,
-            "Access-Control-Allow-Origin": "*",
-            "Access-Control-Allow-Methods":
-              "PUT, POST, GET, DELETE, PATCH, OPTIONS",
-          },
-        }
+      let compareBooksPromise = FetchCompareExplanations(
+        compareBooksCheckedList
       );
 
-      // console.log("comparision books response from backend: ", response.data);
-      setComparedBookExplanations(() => response.data);
+      compareBooksCheckedList
+        .then((response) => {
+          // console.log("comparision books response from backend: ", response.data);
+          setComparedBookExplanations(() => response.data);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
     } catch (error) {
-      console.error(error);
-    } finally {
+      // handle rejected Promise/error/etc...
+      console.log("error during comparision: ", error);
     }
   };
 

@@ -4,6 +4,7 @@ import {
   DUMMY_BOOKS,
   DEFAULT_LOCAL_EXPLANATION,
   FACET_KEYS,
+  SYSTEMS_TO_API_ENDPOINT_MAPPING,
 } from "../components/constants";
 
 function FetchSearchResultsforSearchbarQuery(
@@ -14,10 +15,14 @@ function FetchSearchResultsforSearchbarQuery(
   var searchBarQuery = { ...clickedQuery.clickedBook };
   console.log("clicked query inside fetch: ", searchBarQuery);
   var searchResults = DUMMY_BOOKS;
+
+  var system_type = JSON.parse(sessionStorage.getItem("system_type"));
+  var endpointAPI = SYSTEMS_TO_API_ENDPOINT_MAPPING[system_type]["search_bar"];
+
   return new Promise((resolve, reject) => {
     axios
       .post(
-        "http://localhost:8000/book_search_with_searchbar_inputs",
+        `${endpointAPI}`,
         {
           searchbar_query: searchBarQuery,
           generate_fake_clicks: isEditable,

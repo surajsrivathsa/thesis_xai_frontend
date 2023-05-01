@@ -1,19 +1,17 @@
 import axios from "axios";
+import { SYSTEMS_TO_API_ENDPOINT_MAPPING } from "../components/constants";
 
 function FetchComicPDF(viewBook) {
   console.log("viewing book : ", viewBook);
   var pdfUrl = null;
+  var system_type = JSON.parse(sessionStorage.getItem("system_type"));
+  var endpointAPI = SYSTEMS_TO_API_ENDPOINT_MAPPING[system_type]["view_pdf"];
   return new Promise((resolve, reject) => {
     axios
-      .get(`http://localhost:8000/view_comic_book/${viewBook.comic_no}`, {
+      .get(`${endpointAPI}/${viewBook.comic_no}`, {
         responseType: "arraybuffer",
       })
       .then((response) => {
-        // Create a new Blob object from the response data
-        const blob = new Blob([response.data], { type: "application/pdf" });
-        // Create a URL for the Blob object
-        const url = URL.createObjectURL(blob);
-        console.log("url pdf : ", url);
         resolve(response);
       })
       .catch((error) => {
