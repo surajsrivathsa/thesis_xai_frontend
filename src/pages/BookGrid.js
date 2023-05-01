@@ -19,7 +19,9 @@ import { useParams, Link, useLocation } from "react-router-dom";
 import GlobalExplanationSliderGrid from "../components/global_explanation_slider";
 import FetchSearchResultsforSearchbarQuery from "../backend_api_calls/FetchSearchResultsforSearchbarQuery";
 import FetchSearchResultsForBookGrid from "../backend_api_calls/FetchSearchResultsForBookGrid";
+import FetchComicPDF from "../backend_api_calls/FetchComicPDF";
 import ExplanationChips from "../components/global_explanation_relevance_feedback";
+import AllChipsWithBox from "../components/global_explanation_relevance_feedback_new";
 import { makeStyles } from "@material-ui/core/styles";
 import Chip from "@material-ui/core/Chip";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -447,28 +449,38 @@ function BookGrid(props) {
   };
 
   const handleViewBook = async (book) => {
+    console.log("view book ", book);
+    setBookLoading((prevState) => true);
+
     try {
-      console.log("view book ", book);
-      setBookLoading((prevState) => true);
+      let viewPDFBookPromise = FetchComicPDF((viewBook = book));
 
-      const response = await axios.get(
-        `http://localhost:8000/view_comic_book/${book.comic_no}`,
-        {
-          responseType: "arraybuffer",
-        }
-      );
-
-      // Create a new Blob object from the response data
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      // Create a URL for the Blob object
-      const url = URL.createObjectURL(blob);
-      // Open a new tab with the PDF file
-      window.open(url);
+      viewPDFBookPromise
+        .then((response) => {
+          // Open a new tab with the PDF file
+          window.open(url);
+        })
+        .catch((error) => {
+          throw error;
+        });
     } catch (error) {
-      console.error(error);
+      // handle rejected Promise/error/etc...
+      console.log("error during viewing pdf: ", error);
     } finally {
       setBookLoading((prevState) => false);
     }
+
+    //   // Create a new Blob object from the response data
+    //   const blob = new Blob([response.data], { type: "application/pdf" });
+    //   // Create a URL for the Blob object
+    //   const url = URL.createObjectURL(blob);
+    //   // Open a new tab with the PDF file
+    //   window.open(url);
+    // } catch (error) {
+    //   console.error(error);
+    // } finally {
+    //   setBookLoading((prevState) => false);
+    // }
   };
 
   const addToCompareBooks = (book, checked) => {
@@ -665,7 +677,7 @@ function BookGrid(props) {
       <div className="main-screen">
         <div className="global-explanation-chips">
           <section className="content">
-            <ExplanationChips inputData={relevanceFeedbackExplanation} />
+            <AllChipsWithBox data={relevanceFeedbackExplanation} />
           </section>
         </div>
         {searchLoading ? (
