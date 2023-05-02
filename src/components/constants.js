@@ -24269,6 +24269,18 @@ export const delay = (ms) => {
   });
 };
 
+/*
+Wayne - System with personalization, reranking, comparision, relevance feedback explanation
+Stark - System with personalization, reranking, random comparision, relevance feedback explanation
+Croft - System with personalization, reranking, comparision, random relevance feedback explanation
+Butcher - System with no personalization, no reranking, comparision, relevance feedback explanation
+Gray - System with random personalization, random reranking, comparision, relevance feedback explanation
+
+RQ1 - Wayne vs Stark
+RQ2 - Wayne vs Croft
+RQ3 - Wayne vs Butcher vs Gray
+*/
+
 export const SYSTEMS_TO_API_ENDPOINT_MAPPING = {
   Wayne: {
     search_bar: "http://localhost:8000/book_search_with_searchbar_inputs",
@@ -24282,13 +24294,14 @@ export const SYSTEMS_TO_API_ENDPOINT_MAPPING = {
     search_bar: "http://localhost:8000/book_search_with_searchbar_inputs",
     book_grid: "http://localhost:8000/book_search?b_id=",
     local_explanation: "http://localhost:8000/local_explanation",
-    comparision: "http://localhost:8000/compare_books",
+    comparision: "http://localhost:8000/compare_books_with_random",
     relevance_feedback: "",
     view_pdf: "http://localhost:8000/view_comic_book/",
   },
   Croft: {
     search_bar: "http://localhost:8000/book_search_with_searchbar_inputs",
-    book_grid: "http://localhost:8000/book_search?b_id=",
+    book_grid:
+      "http://localhost:8000/book_search_with_random_explanation_feedback?b_id=",
     local_explanation: "http://localhost:8000/local_explanation",
     comparision: "http://localhost:8000/compare_books",
     relevance_feedback: "",
@@ -24296,15 +24309,18 @@ export const SYSTEMS_TO_API_ENDPOINT_MAPPING = {
   },
   Butcher: {
     search_bar: "http://localhost:8000/book_search_with_searchbar_inputs",
-    book_grid: "http://localhost:8000/book_search?b_id=",
+    book_grid:
+      "http://localhost:8000/book_search_with_no_personalization?b_id=",
     local_explanation: "http://localhost:8000/local_explanation",
     comparision: "http://localhost:8000/compare_books",
     relevance_feedback: "",
     view_pdf: "http://localhost:8000/view_comic_book/",
   },
   Gray: {
-    search_bar: "http://localhost:8000/book_search_with_searchbar_inputs",
-    book_grid: "http://localhost:8000/book_search?b_id=",
+    search_bar:
+      "http://localhost:8000/book_search_with_searchbar_inputs_and_random_serp",
+    book_grid:
+      "http://localhost:8000/book_search_with_random_serp_results?b_id=",
     local_explanation: "http://localhost:8000/local_explanation",
     comparision: "http://localhost:8000/compare_books",
     relevance_feedback: "",
