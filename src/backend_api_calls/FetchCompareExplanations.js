@@ -25,7 +25,7 @@ function FetchCompareExplanations(compareBooksCheckedList) {
         }
       ) // add headers for cors - https://stackoverflow.com/questions/45975135/access-control-origin-header-error-using-axios
       .then((response) => {
-        comparedExplanations = [...response.data];
+        comparedExplanations = response.data;
         console.log("compared explanations : ", comparedExplanations);
         resolve(response);
       })

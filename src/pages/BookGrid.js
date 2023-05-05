@@ -499,7 +499,7 @@ function BookGrid(props) {
         compareBooksCheckedList
       );
 
-      compareBooksCheckedList
+      compareBooksPromise
         .then((response) => {
           // console.log("comparision books response from backend: ", response.data);
           setComparedBookExplanations(() => response.data);
@@ -807,7 +807,10 @@ function BookGrid(props) {
                       <FormControlLabel
                         control={
                           <Checkbox
-                            checked={compareBooksCheckedList.includes(book)}
+                            checked={
+                              compareBooksCheckedList &&
+                              compareBooksCheckedList.includes(book)
+                            }
                             onChange={(event) =>
                               addToCompareBooks(book, event.target.checked)
                             }
