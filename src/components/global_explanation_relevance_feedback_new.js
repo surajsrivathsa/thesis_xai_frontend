@@ -22,7 +22,7 @@ var cdata = [
       ],
       [
         "with a parrot on his shoulder",
-        "he‘s wearing a red neckerchief",
+        "hes wearing a red neckerchief",
         "20.jpeg",
         "Captain Marvel Jr - The hunt for treasure",
       ],
@@ -88,12 +88,12 @@ const useStyles = makeStyles((theme) => ({
   },
   box: {
     position: "relative",
-    top: "1%",
-    left: 0,
-    transform: "translateY(10px)",
+    top: 0,
+    left: "1%",
+
     backgroundColor: "white",
     width: "50%",
-    padding: theme.spacing(3),
+    padding: theme.spacing(1),
     borderRadius: "4px",
     boxShadow: "0 4px 4px rgba(0, 0, 0, 0.15)",
     textAlign: "center",
@@ -123,6 +123,7 @@ function ChipsWithBox({ data }) {
 
   return (
     <div className={classes.root}>
+      <h3>Because you were interested in</h3>
       {data.map(
         (
           [

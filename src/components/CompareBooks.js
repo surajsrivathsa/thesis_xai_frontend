@@ -1,5 +1,6 @@
 import React from "react";
 import "./CompareBooks.css";
+import { Chip } from "@mui/material";
 
 /*
 const CrossTab = ({ comparedBooks }) => {
@@ -65,6 +66,19 @@ const CrossTab = ({ comparedBooks }) => {
 export default CrossTab;
 */
 
+const img_folderpath = "../../comic_book_covers_ui/";
+const subCategoriesWithLists = [
+  "genre",
+  "male_characters",
+  "female_characters",
+  "occupations",
+];
+function ChipsList({ list }) {
+  return (
+    <div>{list && list.map((item) => <Chip key={item} label={item} />)}</div>
+  );
+}
+
 const CompareBooks = ({ data }) => {
   console.log("inside compare books: ", data.compared_books);
   const books =
@@ -87,12 +101,20 @@ const CompareBooks = ({ data }) => {
       (item) => Object.keys(item)[0] === book
     )[book][category];
 
-    if (subCategory) {
+    console.log("item for : ", item);
+    console.log("category: ", category);
+    console.log("subcategory: ", subCategory);
+    if (subCategory && subCategoriesWithLists.includes(subCategory) && item) {
+      console.log("detected list: ", item);
+      console.log("chips outout: ", ChipsList(item));
+      return ChipsList(item);
+    } else if (subCategory && !subCategoriesWithLists.includes(subCategory)) {
       return item[subCategory] || "-";
     }
-
     if (Array.isArray(item)) {
-      return item.join(", ");
+      console.log("detected list: ", item);
+      console.log("chips outout: ", ChipsList(item));
+      return ChipsList(item);
     }
 
     return item || "-";
@@ -128,7 +150,14 @@ const CompareBooks = ({ data }) => {
         {books &&
           books.map((book) => (
             <tr key={book}>
-              <td>{book}</td>
+              <td>
+                <img
+                  src={img_folderpath + "original_" + book + "_1.jpeg"}
+                  alt={"no images found"}
+                  width="140"
+                  height="180"
+                />
+              </td>
               {categories.map((category) =>
                 subCategories[category] ? (
                   subCategories[category].map((subCategory) => (

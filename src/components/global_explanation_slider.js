@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { DataGrid } from "@mui/x-data-grid";
 import { Slider, Button, Switch, Tooltip } from "@mui/material";
 import { capitalize } from "@material-ui/core";
+import { Typography } from "@mui/material";
 
 const inputKeys = [
   "genre_comb",
@@ -16,8 +17,8 @@ const FACET_NAME_OBJ = {
   genre_comb: "Genre",
   gender: "Gender",
   panel_ratio: "Story Pace",
-  supersense: "Topics and Keywords from Dialogues",
-  comic_cover_img: "Book Cover Image",
+  supersense: "Broad Themes from Dialogues",
+  comic_cover_img: "Visual aspects of Book Cover Image",
   comic_cover_txt: "Topics from Book Cover Image",
 };
 
@@ -36,7 +37,8 @@ const FACET_NAME_TOOLTIP_LST = {
   panel_ratio: "Story Pace, Book Length and Ease of Reading the book",
   supersense:
     "Coarse topics such as weather, adjectives, emotions that are talked about in the dialogues",
-  comic_cover_img: "Book cover image",
+  comic_cover_img:
+    "Represents visual aspects of Book cover image like color, objects",
   comic_cover_txt: "Textual topics extracted from book cover image",
 };
 
@@ -139,9 +141,15 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
     {
       field: "name",
       headerName: "Facet Name",
-      width: 260,
+      width: 250,
       renderCell: (params) => (
-        <Tooltip title={FACET_NAME_TOOLTIP_LST[params.row.id]}>
+        <Tooltip
+          title={
+            <Typography fontSize={15}>
+              {FACET_NAME_TOOLTIP_LST[params.row.id]}
+            </Typography>
+          }
+        >
           <span className="table-cell-trucate">{params.row.name}</span>
         </Tooltip>
       ),
@@ -149,9 +157,15 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
     {
       field: "value",
       headerName: "Contribution towards Search",
-      width: 270,
+      width: 200,
       renderCell: (params) => (
-        <Tooltip title={FACET_VALUE_TOOLTIP_LST[params.row.id]}>
+        <Tooltip
+          title={
+            <Typography fontSize={15}>
+              {FACET_VALUE_TOOLTIP_LST[params.row.id]}
+            </Typography>
+          }
+        >
           <Slider
             min={0}
             max={1}
@@ -169,7 +183,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
     {
       field: "isEditable",
       headerName: "Edit Contribution",
-      width: 100,
+      width: 95,
       renderHeader: (params) => (
         <div style={{ display: "flex", alignItems: "center" }}>
           <div>{params.headerName}</div>
@@ -198,6 +212,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
 
   return (
     <div>
+      <h3>Facet Contribution Towards Search</h3>
       <DataGrid
         rows={rows}
         columns={columns}

@@ -14,11 +14,11 @@
 } */
 
 .about-us {
-  max-width: 800px;
-  margin-top: 10%;
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: auto;
+max-width: 100%;
+margin: 10% auto;
+padding: 0 5%;
+text-align: center;
+font-size: larger;
 }
 
 .header-section {

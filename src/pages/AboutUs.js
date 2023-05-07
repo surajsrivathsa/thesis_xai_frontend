@@ -7,10 +7,20 @@ function AboutUs() {
       <div className="header-section">
         <h1>About Us</h1>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-          eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad
-          minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-          aliquip ex ea commodo consequat.
+          Welcome to our comic book search system! We are passionate about
+          helping comic book enthusiasts find the books they love. We understand
+          the challenges of finding the perfect book. We've created a search
+          engine that takes into account not only genre and theme, but also more
+          nuanced factors such as story pace and comic book cover art. We
+          believe that every comic book reader has unique tastes, and our system
+          is designed to help personalize the search experience for each user.
+          User acts as co-pilot of the system and can take over the
+          personalization from the system to tune it as they like. We also
+          attempt to provide you with answers on "Why did i get these search
+          results?" through local and global explanations. We welcome feedback
+          from our users and are always open to suggestions for how we can
+          better serve the comic book community. Thank you for using our search
+          system and we hope you find your next favorite comic book!
         </p>
       </div>
       <div className="video-section">
@@ -27,9 +37,9 @@ function AboutUs() {
       <div className="contact-section">
         <h2>Contact Us</h2>
         <ul>
-          <li>Email: contact@booksearchproject.com</li>
+          <li>Email: suraj.shashidhar@st.ovgu.de</li>
           <li>Phone: 123-456-7890</li>
-          <li>Address: 123 Main St, Anytown, USA</li>
+          <li>Address: Ovgu, Magdeburg</li>
         </ul>
       </div>
       <div className="form-section">

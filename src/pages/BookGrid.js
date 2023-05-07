@@ -37,11 +37,11 @@ const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL 
 const initial_chips = [
   {
     comic_no: 0,
-    book_title: ", could not determine your interests for this search",
+    book_title: "could not determine your interests for this search",
     genre: "No Genre",
     year: 1950,
     query_book: false,
-    explanation_lst: ["No Themes Found"],
+    explanation_lst: [["No Themes Found"]],
   },
 ];
 
@@ -791,7 +791,7 @@ function BookGrid(props) {
                         disabled={bookLoading}
                         className="view-book-button"
                       >
-                        {bookLoading ? "Loading Book..." : "View Book"}
+                        {bookLoading ? "Loading Book..." : "Read"}
                       </button>
                     </div>
                     {/* <Checkbox
@@ -832,7 +832,7 @@ function BookGrid(props) {
           </div>
         )}
 
-        <div>
+        <div classname="compare-books-container">
           <Modal
             open={openBackdrop}
             onClose={handleCloseBackdrop}
@@ -880,7 +880,6 @@ function BookGrid(props) {
 
         <div className="global-explanation-container">
           {/* <BarchartApp global_explanations_lst={globalExplanation} /> */}
-          <h3>Facet Contribution Towards Search</h3>
           <div className="global-explanation-slider">
             <GlobalExplanationSliderGrid
               inputData={globalExplanation[1]}

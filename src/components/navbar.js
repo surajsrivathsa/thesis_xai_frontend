@@ -111,8 +111,12 @@ function NavBar() {
           />
         </Link>
       </div>
+
+      <div className="search-container">
+        <SearchContainer getUserInputsFromSearchBar={generateGrid} />
+      </div>
       <div className="dropdown-container">
-        <label htmlFor="dropdown">Select an option:</label>
+        <label htmlFor="dropdown">Select the System</label>
         <Select
           labelId="dropdown-label"
           id="dropdown"
@@ -126,9 +130,6 @@ function NavBar() {
           <MenuItem value="Butcher">Butcher</MenuItem>
           <MenuItem value="Gray">Gray</MenuItem>
         </Select>
-      </div>
-      <div className="search-container">
-        <SearchContainer getUserInputsFromSearchBar={generateGrid} />
       </div>
     </div>
   );

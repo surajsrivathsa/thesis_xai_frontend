@@ -54,8 +54,9 @@
 }
 
 .dropdown-container {
-  margin-top: 2%;
-  margin-left: 3%;
+  margin-top: 0.5%;
+  margin-left: 7%;
+  margin-right: 2%;
   position: relative;
   display: inline-block;
 }

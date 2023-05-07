@@ -24152,7 +24152,7 @@ export const FAMOUS_TITLES_LIST = [
   },
   {
     id: 564,
-    comic_no: 542,
+    comic_no: 564,
     book_title: "Avengers001",
     backdrop_path: "../../comic_book_covers_ui/original_564_1.jpeg",
     genre: "superhero",
