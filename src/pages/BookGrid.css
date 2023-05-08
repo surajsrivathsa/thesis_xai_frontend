@@ -100,21 +100,21 @@
     width: auto;
     display: flex;
     position: relative;
-    margin-top: 2em;
+    /* margin-top: 2em; */
     color: white;
 }
 
 .global-explanation-slider {
     padding: 1em;
     text-align: center;
-    height: 70em;
+    /* height: 70em; */
     width: auto;
     display: flex;
     position:absolute;
-    margin-top: 3em;
+    /* margin-top: 3em; */
     margin-left: 1em;
     margin-right: 2em;
-    margin-bottom: 3em
+    /* margin-bottom: 3em */
 }
 .global-explanation-chips {
     padding: 1em;
@@ -133,20 +133,20 @@
     width: auto;
     display: flex;
     position:relative;
-    margin-top: 5em;
+    margin-top: 1em;
     margin-bottom: 2em;
 }
 
 .side-bar-container {
     background-color: black;
-    padding: 5px;
+    /* padding: 5px; */
     width: 25%;
     height: 100%;
     position: absolute;
     right: 0;
     top: 0;
     bottom: 0;
-    border-left: 3mm ridge;
+    /* border-left: 3mm ridge; */
     border-left-style: groove;
     border-left-color: black;
 }
@@ -420,4 +420,10 @@
   align-items: center;
   display: flex;
   justify-content: center;
+}
+
+
+.myBookGrid {
+  height: 80vh; /* Set the height as a percentage of the viewport height */
+  overflow-y: auto; /* Enable vertical scrolling when content overflows */
 }

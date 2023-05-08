@@ -3,6 +3,9 @@ import { DataGrid } from "@mui/x-data-grid";
 import { Slider, Button, Switch, Tooltip } from "@mui/material";
 import { capitalize } from "@material-ui/core";
 import { Typography } from "@mui/material";
+import ShareIcon from '@mui/icons-material/Share';
+import EditIcon from '@mui/icons-material/Edit';
+import EditOffIcon from '@mui/icons-material/EditOff';
 
 const inputKeys = [
   "genre_comb",
@@ -156,8 +159,22 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
     },
     {
       field: "value",
-      headerName: "Contribution towards Search",
       width: 200,
+      renderHeader: (params) => (
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <EditIcon />
+          <div>{params.headerName}</div>
+          <Switch
+            checked={isEditable}
+            onChange={handleSwitchChange}
+            inputProps={{ "aria-label": "controlled" }}
+            sx={{
+              "& .MuiSwitch-thumb": { color: isEditable ? "#A9A9A9" : "#42a5f5" },
+              "& .MuiSwitch-track": { backgroundColor: isEditable ? "#42a5f5" : "#A9A9A9" },
+            }}
+          />
+        </div>
+      ),
       renderCell: (params) => (
         <Tooltip
           title={
@@ -179,28 +196,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
           />
         </Tooltip>
       ),
-    },
-    {
-      field: "isEditable",
-      headerName: "Edit Contribution",
-      width: 95,
-      renderHeader: (params) => (
-        <div style={{ display: "flex", alignItems: "center" }}>
-          <div>{params.headerName}</div>
-          <Switch
-            checked={isEditable}
-            onChange={handleSwitchChange}
-            inputProps={{ "aria-label": "controlled" }}
-            sx={{
-              "& .MuiSwitch-thumb": { color: "#42a5f5" },
-              "& .MuiSwitch-track": {
-                color: isEditable ? "#42a5f5" : "#bcbcbc",
-              },
-            }}
-          />
-        </div>
-      ),
-    },
+    }
   ];
 
   const rows = inputKeys.map((k) => ({
@@ -219,7 +215,7 @@ const GlobalExplanationSliderGrid = ({ inputData, onSubmit }) => {
         autoHeight={true}
         disableColumnMenu={true}
         onStateChange={conditionalGlobalExplanationUpdateFromBackend}
-        sx={{ color: "whitesmoke" }}
+        sx={{ color: "whitesmoke"}}
       />
     </div>
   );

@@ -4,6 +4,15 @@ import "./local_explanation.css";
 
 import { Card, CardHeader, CardContent, Grid } from "@mui/material";
 import { capitalize } from "@material-ui/core";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+} from "@mui/material";
 
 var labels_lst = ["query_book", "selected_book"];
 
@@ -267,40 +276,62 @@ function StoryPaceExplanation(props) {
     },
   };
 
-  if (Math.floor(Math.random() * 10) % 2 === 1) {
-    return (
-      <div className="local-explanation">
-        <h3>Story Pace Comparision</h3>
-        <Line
-          data={new_state.data}
-          width={null}
-          height={null}
-          options={options}
-          className="local-explanation"
-        />
-      </div>
-    );
-  } else {
-    return (
-      <div className="local-explanation">
-        <h3>Story Pace Comparision</h3>
-        <CardGrid
-          pagecount={query_book_pages}
-          story_pace={panel_ratio_query_book}
-          pagecount_str="Query Book Page Count"
-          story_pace_str="Query Book Story Pace"
-          color_str="rgb(255, 99, 132)"
-        />
-        <CardGrid
-          pagecount={interested_book_pages}
-          story_pace={panel_ratio_interested_book}
-          pagecount_str="Interested Book Page Count"
-          story_pace_str="Interested Book Story Pace"
-          color_str="rgb(53, 162, 235)"
-        />
-      </div>
-    );
-  }
+  return (
+    <div className="local-explanation">
+      <h3>Story Pace Comparision</h3>
+      {
+        (Math.floor(Math.random() * 10) % 2 === 1) ? (
+          <Line
+            data={new_state.data}
+            width={null}
+            height={null}
+            options={options}
+            className="local-explanation"
+          />
+        ): (
+          <>
+            <TableContainer component={Paper}>
+              <Table aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>#</TableCell>
+                    <TableCell sx={{color: "rgb(255, 99, 132)" }} >Query Book</TableCell>
+                    <TableCell sx={{color: "rgb(53, 162, 235)" }}>Hovered Book</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  <TableRow>
+                    <TableCell>Page Count</TableCell>
+                    <TableCell>{query_book_pages}</TableCell>
+                    <TableCell>{interested_book_pages}</TableCell>
+                  </TableRow>
+                  <TableRow>
+                    <TableCell>
+                      Story Pace <br /><p>*higher the number, higher the pace</p>
+                    </TableCell>
+                    <TableCell>{panel_ratio_query_book}</TableCell>
+                    <TableCell>{panel_ratio_interested_book}</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+            </TableContainer>
+            {/* <CardGrid
+              pagecount={query_book_pages}
+              story_pace={panel_ratio_query_book}
+              pagecount_str="Query Book Page Count"
+              story_pace_str="Query Book Story Pace"
+              color_str="rgb(255, 99, 132)" />
+            <CardGrid
+                pagecount={interested_book_pages}
+                story_pace={panel_ratio_interested_book}
+                pagecount_str="Interested Book Page Count"
+                story_pace_str="Interested Book Story Pace"
+                color_str="rgb(53, 162, 235)" /> */}
+          </>
+        )
+      }
+    </div>
+  );
 }
 
 export { FacetKeywordsComp, LinechartApp, StoryPaceExplanation };

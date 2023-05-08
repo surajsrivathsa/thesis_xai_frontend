@@ -712,88 +712,115 @@ function BookGrid(props) {
             <CircularProgress size={100} />
           </div>
         ) : (
-          <Grid container spacing={4}>
-            {books &&
-              books.slice(0, 15).map((book) => (
-                <Grid item key={book.comic_no + "-grid"} xs={12} sm={6} md={2} lg={2.25}>
-                  <Card sx={
-                          book.query_book === true
-                            ? { border: "7px solid blue", maxWidth: 220 }
-                            : { maxWidth: 220 }
-                        }>
-                    <CardMedia 
-                      onMouseEnter={() => handleMouseEnter(book)}
-                      onMouseLeave={() => handleMouseLeave()}
-                      onClick={() => handleClick(book)}
-                      className={classes.cardMedia}
-                    >
-                      <img
-                        height="300"
-                        src={
-                          img_folderpath +
-                          "original_" +
-                          book.comic_no +
-                          "_1.jpeg"
-                        }
-                        alt={book.book_title}
-                      />
-                      <div className={classes.hoverContent}>
-                        <Grid container spacing={1}>
-                            <Grid item>
-                              <Tooltip title="book id">
-                                <Chip
-                                  label={book.comic_no}
-                                  color={"default"}
-                                  sx={{ fontSize: 18 }}
-                                />
-                              </Tooltip>
-                            </Grid>
-                            {Array.from(book.genre.split("|")).map(
-                              (genre_str, index) => (
-                                <Grid item key={`${book.comic_no}-${index}`}>
-                                  <Tooltip title="genre">
-                                    <Chip
-                                      label={genre_str}
-                                      color={"default"}
-                                      sx={{ fontSize: 15 }}
-                                    />
-                                  </Tooltip>
-                                </Grid>
-                              )
-                            )}
-                            {FACET_KEYS.map((key) =>
-                              Array.from(localExplanation[3][key]).map(
-                                (facet_str, index) => (
-                                  <Grid
-                                    item
-                                    key={`${book.comic_no}-${index}`}
-                                  >
-                                    <Tooltip title={key}>
+          //  Below grid renders the books
+          <div className="myBookGrid">
+            <Grid container spacing={4}>
+              {books &&
+                books.slice(0, 15).map((book) => (
+                  <Grid item key={book.comic_no + "-grid"} xs={12} sm={6} md={2} lg={2.25}>
+                    <Card sx={
+                            book.query_book === true
+                              ? { border: "7px solid blue", maxWidth: 220 }
+                              : { maxWidth: 220 }
+                          }>
+                      <CardMedia 
+                        onMouseEnter={() => handleMouseEnter(book)}
+                        // onMouseLeave={() => handleMouseLeave()}
+                        onClick={() => handleClick(book)}
+                        className={classes.cardMedia}
+                      >
+                        <img
+                          height="300"
+                          src={
+                            img_folderpath +
+                            "original_" +
+                            book.comic_no +
+                            "_1.jpeg"
+                          }
+                          alt={book.book_title}
+                        />
+                        <div className={classes.hoverContent}>
+                          <Grid container spacing={1}>
+                              <Grid item>
+                                <Tooltip title="book id">
+                                  <Chip
+                                    label={book.comic_no}
+                                    color={"default"}
+                                    sx={{ fontSize: 18 }}
+                                  />
+                                </Tooltip>
+                              </Grid>
+                              {Array.from(book.genre.split("|")).map(
+                                (genre_str, index) => (
+                                  <Grid item key={`${book.comic_no}-${index}`}>
+                                    <Tooltip title="genre">
                                       <Chip
-                                        label={facet_str}
-                                        color={"primary"}
+                                        label={genre_str}
+                                        color={"default"}
+                                        sx={{ fontSize: 15 }}
                                       />
                                     </Tooltip>
                                   </Grid>
                                 )
-                              )
-                            )}
-                          </Grid>
-                      </div>
-                    </CardMedia>
-                    {/* <CardContent>
-                      <IconButton>
-                        <Button
-                          onClick={() => handleViewBook(book)}
-                          disabled={bookLoading}
-                          variant="contained"
-                          size="small"
-                        >
-                          {bookLoading ? "Loading Book..." : "Read"}
-                        </Button>
-                      </IconButton>
-                      <Typography variant="body2" color="text.secondary">
-                        <FormControlLabel
+                              )}
+                              {FACET_KEYS.map((key) =>
+                                Array.from(localExplanation[3][key]).map(
+                                  (facet_str, index) => (
+                                    <Grid
+                                      item
+                                      key={`${book.comic_no}-${index}`}
+                                    >
+                                      <Tooltip title={key}>
+                                        <Chip
+                                          label={facet_str}
+                                          color={"primary"}
+                                        />
+                                      </Tooltip>
+                                    </Grid>
+                                  )
+                                )
+                              )}
+                            </Grid>
+                        </div>
+                      </CardMedia>
+                      {/* <CardContent>
+                        <IconButton>
+                          <Button
+                            onClick={() => handleViewBook(book)}
+                            disabled={bookLoading}
+                            variant="contained"
+                            size="small"
+                          >
+                            {bookLoading ? "Loading Book..." : "Read"}
+                          </Button>
+                        </IconButton>
+                        <Typography variant="body2" color="text.secondary">
+                          <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={
+                                    compareBooksCheckedList &&
+                                    compareBooksCheckedList.includes(book)
+                                  }
+                                  onChange={(event) =>
+                                    addToCompareBooks(book, event.target.checked)
+                                  }
+                                />
+                              }
+                              label={`${book.book_title}`}
+                              classes={{ label: classes.label }}
+                            />
+                        </Typography>
+                      </CardContent> */}
+                      <CardActions disableSpacing>
+                        <IconButton>
+                          <Tooltip title="Preview">
+                            <PreviewIcon onClick={() => handleViewBook(book)}
+                              disabled={bookLoading} fontSize="large" color="primary" aria-label="Read"  />
+                          </Tooltip>
+                        </IconButton>
+                        <IconButton aria-label="share">
+                          <FormControlLabel
                             control={
                               <Checkbox
                                 checked={
@@ -808,37 +835,13 @@ function BookGrid(props) {
                             label={`${book.book_title}`}
                             classes={{ label: classes.label }}
                           />
-                      </Typography>
-                    </CardContent> */}
-                    <CardActions disableSpacing>
-                      <IconButton>
-                        <Tooltip title="Preview">
-                          <PreviewIcon onClick={() => handleViewBook(book)}
-                            disabled={bookLoading} fontSize="large" color="primary" aria-label="Read"  />
-                        </Tooltip>
-                      </IconButton>
-                      <IconButton aria-label="share">
-                        <FormControlLabel
-                          control={
-                            <Checkbox
-                              checked={
-                                compareBooksCheckedList &&
-                                compareBooksCheckedList.includes(book)
-                              }
-                              onChange={(event) =>
-                                addToCompareBooks(book, event.target.checked)
-                              }
-                            />
-                          }
-                          label={`${book.book_title}`}
-                          classes={{ label: classes.label }}
-                        />
-                      </IconButton>
-                    </CardActions>
-                  </Card>
-                </Grid>
-              ))}
-          </Grid>
+                        </IconButton>
+                      </CardActions>
+                    </Card>
+                  </Grid>
+                ))}
+            </Grid>
+          </div>
 
         )}
 
