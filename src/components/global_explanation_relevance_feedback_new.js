@@ -136,7 +136,7 @@ function ChipsWithBox({ data }) {
           ],
           index
         ) => (
-          <div>
+          <div className="myGlobReleCls">
             <Tooltip key={`${comicNo}-${index}`} title={bookTitle}>
               <Chip
                 key={`${comicNo}-${bookTitle}-${mainText}`}
@@ -154,16 +154,7 @@ function ChipsWithBox({ data }) {
           className={classes.box}
           onClick={() => handleChipClick(data[clickedChipID][0], clickedChipID)}
         >
-          <Tooltip
-            key={`${data[clickedChipID][4]}-${data[clickedChipID][3]}`}
-            title={data[clickedChipID][5]}
-          >
-            <Chip
-              key={`${data[clickedChipID][0]}-${data[clickedChipID][5]}-${data[clickedChipID][3]}`}
-              label={data[clickedChipID][3]}
-              className={classes.chip}
-            />
-          </Tooltip>
+          
 
           <img
             src={
@@ -173,6 +164,17 @@ function ChipsWithBox({ data }) {
             width="140"
             height="180"
           />
+          <br />
+          <Tooltip
+            key={`${data[clickedChipID][4]}-${data[clickedChipID][3]}`}
+            title={data[clickedChipID][5]}
+          >
+            <Chip
+              key={`${data[clickedChipID][0]}-${data[clickedChipID][5]}-${data[clickedChipID][3]}`}
+              label={data[clickedChipID][3]}
+              className={classes.chip}
+            />
+        </Tooltip>
         </Box>
       )}
     </div>

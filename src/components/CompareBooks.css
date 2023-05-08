@@ -33,3 +33,7 @@
 .cross-tab th {
   background-color: #f2f2f2;
 }
+
+.myDialogTableCls th{
+  text-align: center;
+}

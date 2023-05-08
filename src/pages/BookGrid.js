@@ -783,7 +783,7 @@ function BookGrid(props) {
                             </Grid>
                         </div>
                       </CardMedia>
-                      {/* <CardContent>
+                      <CardContent>
                         <IconButton>
                           <Button
                             onClick={() => handleViewBook(book)}
@@ -808,18 +808,18 @@ function BookGrid(props) {
                                 />
                               }
                               label={`${book.book_title}`}
-                              classes={{ label: classes.label }}
+                              // classes={{ label: classes.label }}
                             />
                         </Typography>
-                      </CardContent> */}
-                      <CardActions disableSpacing>
+                      </CardContent>
+                      {/* <CardActions disableSpacing>
                         <IconButton>
                           <Tooltip title="Preview">
                             <PreviewIcon onClick={() => handleViewBook(book)}
                               disabled={bookLoading} fontSize="large" color="primary" aria-label="Read"  />
                           </Tooltip>
                         </IconButton>
-                        <IconButton aria-label="share">
+                        <IconButton>
                           <FormControlLabel
                             control={
                               <Checkbox
@@ -836,7 +836,7 @@ function BookGrid(props) {
                             classes={{ label: classes.label }}
                           />
                         </IconButton>
-                      </CardActions>
+                      </CardActions> */}
                     </Card>
                   </Grid>
                 ))}

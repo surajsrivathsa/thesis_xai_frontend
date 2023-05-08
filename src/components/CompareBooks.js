@@ -75,7 +75,7 @@ const subCategoriesWithLists = [
 ];
 function ChipsList({ list }) {
   return (
-    <div>{list && list.map((item) => <Chip key={item} label={item} />)}</div>
+    <div>{list && list.map((item) => <Chip key={item} label={item} />)}</div> //
   );
 }
 
@@ -106,8 +106,8 @@ const CompareBooks = ({ data }) => {
     console.log("subcategory: ", subCategory);
     if (subCategory && subCategoriesWithLists.includes(subCategory) && item) {
       console.log("detected list: ", item);
-      console.log("chips outout: ", ChipsList(item));
-      return ChipsList(item);
+      // console.log("chips outout: ", ChipsList(item.subCategory));
+      return renderSpanElements(item[subCategory]);
     } else if (subCategory && !subCategoriesWithLists.includes(subCategory)) {
       return item[subCategory] || "-";
     }
@@ -120,9 +120,19 @@ const CompareBooks = ({ data }) => {
     return item || "-";
   };
 
+  const renderSpanElements = (list) => {
+    return (
+      <div>
+        {list.map((word, index) => (
+          <Chip key={index} label={word} />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <table className="cross-tab">
-      <thead>
+      <thead className="myDialogTableCls">
         <tr>
           <th>Books</th>
           {categories.map((category) =>
