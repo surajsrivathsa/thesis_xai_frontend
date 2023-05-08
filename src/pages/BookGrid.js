@@ -31,6 +31,22 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Checkbox from "@mui/material/Checkbox";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { Modal, Backdrop, Fade, Box } from "@mui/material";
+import IconButton, { IconButtonProps } from '@mui/material/IconButton';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import MenuBookIcon from "@mui/icons-material/MenuBook";
+import PreviewIcon from '@mui/icons-material/Preview';
+import CardActions from '@mui/material/CardActions';
+import {
+  Grid,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardMedia,
+  Button,
+} from "@mui/material";
+import Typography from '@mui/material/Typography';
+
 
 const img_folderpath = "../../comic_book_covers_ui/"; ///process.env.PUBLIC_URL + Users/surajshashidhar/Downloads/comic_book_covers_ui";
 
@@ -652,14 +668,39 @@ function BookGrid(props) {
     );
   }, [comparedBookExplanations]);
 
+  const useStyles = makeStyles((theme) => ({
+    label: {
+      maxWidth: "120px", // Adjust this value according to your desired width
+      whiteSpace: "nowrap",
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    cardMedia: {
+      position: "relative",
+    },
+    hoverContent: {
+      opacity: 0,
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      background: "rgba(0, 0, 0, 0.5)",
+      transition: "opacity 0.3s",
+      "&:hover": {
+        opacity: 1,
+      },
+    },
+  }));  
+  
+
+  const classes = useStyles();
+
   return (
     <div className="app-container">
-      {/* <div className="nav-bar">
-        <HomeLogo />
-        <div className="search-container">
-          <SearchContainer getUserInputsFromSearchBar={ProcessSearchBarInput} />
-        </div>
-      </div> */}
       <div className="main-screen">
         <div className="global-explanation-chips">
           <section className="content">
@@ -671,31 +712,23 @@ function BookGrid(props) {
             <CircularProgress size={100} />
           </div>
         ) : (
-          <div className="book-grid">
+          <Grid container spacing={4}>
             {books &&
               books.slice(0, 15).map((book) => (
-                <div key={book.comic_no + "-" + "grid"}>
-                  <Link
-                    key={book.id}
-                    className="link"
-                    to={{ pathname: `/search/${book.comic_no}` }}
-                    state={{ book: book }}
-                    exact="true"
-                  >
-                    <div
-                      key={book.id}
-                      className="book"
+                <Grid item key={book.comic_no + "-grid"} xs={12} sm={6} md={2} lg={2.25}>
+                  <Card sx={
+                          book.query_book === true
+                            ? { border: "7px solid blue", maxWidth: 220 }
+                            : { maxWidth: 220 }
+                        }>
+                    <CardMedia 
                       onMouseEnter={() => handleMouseEnter(book)}
                       onMouseLeave={() => handleMouseLeave()}
                       onClick={() => handleClick(book)}
-                      style={
-                        currentQueryBook === book.id
-                          ? { border: "3px solid blue" }
-                          : {}
-                      }
+                      className={classes.cardMedia}
                     >
                       <img
-                        key={book.id}
+                        height="300"
                         src={
                           img_folderpath +
                           "original_" +
@@ -703,133 +736,110 @@ function BookGrid(props) {
                           "_1.jpeg"
                         }
                         alt={book.book_title}
-                        className="imageLarge"
-                        style={
-                          book.query_book === true
-                            ? { border: "7px solid blue" }
-                            : {}
-                        }
                       />
-                      {hoveredBook === book && showOverlay && (
-                        <div className="book-overlay">
-                          <p>
-                            <Tooltip
-                              key={`${book.comic_no}+"_iding`}
-                              title="book id"
-                            >
-                              <Chip
-                                key={`${book.comic_no}+"_id`}
-                                label={book.comic_no}
-                                color={"default"}
-                                style={{
-                                  margin: "5px",
-                                  flexWrap: "wrap",
-                                  fontSize: 20,
-                                }}
-                              />
-                            </Tooltip>
-                          </p>
-                          <p>
+                      <div className={classes.hoverContent}>
+                        <Grid container spacing={1}>
+                            <Grid item>
+                              <Tooltip title="book id">
+                                <Chip
+                                  label={book.comic_no}
+                                  color={"default"}
+                                  sx={{ fontSize: 18 }}
+                                />
+                              </Tooltip>
+                            </Grid>
                             {Array.from(book.genre.split("|")).map(
                               (genre_str, index) => (
-                                <Tooltip
-                                  key={`${book.comic_no}-${index}`}
-                                  title="genre"
-                                >
-                                  <Chip
-                                    key={`${book.comic_no}-${index}`}
-                                    label={genre_str}
-                                    color={"default"}
-                                    style={{
-                                      margin: "5px",
-                                      flexWrap: "wrap",
-                                      fontSize: 18,
-                                    }}
-                                  />
-                                </Tooltip>
+                                <Grid item key={`${book.comic_no}-${index}`}>
+                                  <Tooltip title="genre">
+                                    <Chip
+                                      label={genre_str}
+                                      color={"default"}
+                                      sx={{ fontSize: 15 }}
+                                    />
+                                  </Tooltip>
+                                </Grid>
                               )
                             )}
-                          </p>
-                          <p>
                             {FACET_KEYS.map((key) =>
                               Array.from(localExplanation[3][key]).map(
                                 (facet_str, index) => (
-                                  <Tooltip
+                                  <Grid
+                                    item
                                     key={`${book.comic_no}-${index}`}
-                                    title={key}
                                   >
-                                    <Chip
-                                      key={`${book.comic_no}-${index}`}
-                                      label={facet_str}
-                                      color={"primary"}
-                                      style={{
-                                        margin: "5px",
-                                        flexWrap: "wrap",
-                                      }}
-                                    />
-                                  </Tooltip>
+                                    <Tooltip title={key}>
+                                      <Chip
+                                        label={facet_str}
+                                        color={"primary"}
+                                      />
+                                    </Tooltip>
+                                  </Grid>
                                 )
                               )
                             )}
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                  {/* for thumbs up and down so that it doesnt route it to link */}
-                  <div className="thumbs">
-                    {/* <button
-                      onClick={() => handleThumbsUp(book)}
-                      className="thumbs-up"
-                      key={book.comic_no + "-" + "thumbs_up"}
-                    >
-                      👍 {book.thumbsUp}
-                    </button> */}
-                    <div key={book.comic_no + "-" + "view_book"}>
-                      <button
-                        onClick={() => handleViewBook(book)}
-                        disabled={bookLoading}
-                        className="view-book-button"
-                      >
-                        {bookLoading ? "Loading Book..." : "Read"}
-                      </button>
-                    </div>
-                    {/* <Checkbox
-                      checked={false}
-                      onChange={(event, book) =>
-                        addToCompareBooks(book, event.target.checked)
-                      }
-                      inputProps={{ "aria-label": "controlled" }}
-                      key={book.comic_no + "-" + "checkbox_compare"}
-                    /> */}
-
-                    <div key={book.comic_no + "-" + "checkbox_compare"}>
-                      <FormControlLabel
-                        control={
-                          <Checkbox
-                            checked={
-                              compareBooksCheckedList &&
-                              compareBooksCheckedList.includes(book)
+                          </Grid>
+                      </div>
+                    </CardMedia>
+                    {/* <CardContent>
+                      <IconButton>
+                        <Button
+                          onClick={() => handleViewBook(book)}
+                          disabled={bookLoading}
+                          variant="contained"
+                          size="small"
+                        >
+                          {bookLoading ? "Loading Book..." : "Read"}
+                        </Button>
+                      </IconButton>
+                      <Typography variant="body2" color="text.secondary">
+                        <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={
+                                  compareBooksCheckedList &&
+                                  compareBooksCheckedList.includes(book)
+                                }
+                                onChange={(event) =>
+                                  addToCompareBooks(book, event.target.checked)
+                                }
+                              />
                             }
-                            onChange={(event) =>
-                              addToCompareBooks(book, event.target.checked)
-                            }
+                            label={`${book.book_title}`}
+                            classes={{ label: classes.label }}
                           />
-                        }
-                        label={`${book.book_title}`}
-                      />
-                    </div>
-                    {/* <button
-                      onClick={() => handleThumbsDown(book)}
-                      className="thumbs-down"
-                      key={book.comic_no + "-" + "thumbs_down"}
-                    >
-                      👎 {book.thumbsDown}
-                    </button> */}
-                  </div>
-                </div>
+                      </Typography>
+                    </CardContent> */}
+                    <CardActions disableSpacing>
+                      <IconButton>
+                        <Tooltip title="Preview">
+                          <PreviewIcon onClick={() => handleViewBook(book)}
+                            disabled={bookLoading} fontSize="large" color="primary" aria-label="Read"  />
+                        </Tooltip>
+                      </IconButton>
+                      <IconButton aria-label="share">
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              checked={
+                                compareBooksCheckedList &&
+                                compareBooksCheckedList.includes(book)
+                              }
+                              onChange={(event) =>
+                                addToCompareBooks(book, event.target.checked)
+                              }
+                            />
+                          }
+                          label={`${book.book_title}`}
+                          classes={{ label: classes.label }}
+                        />
+                      </IconButton>
+                    </CardActions>
+                  </Card>
+                </Grid>
               ))}
-          </div>
+          </Grid>
+
         )}
 
         <div classname="compare-books-container">

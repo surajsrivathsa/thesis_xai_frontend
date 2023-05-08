@@ -119,7 +119,7 @@
 .global-explanation-chips {
     padding: 1em;
     text-align: center;
-    height: 2em;
+    height: 10%;
     display: flex;
     position: relative;
     margin-top: 2em;
