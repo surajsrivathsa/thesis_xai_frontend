@@ -1,0 +1,31 @@
+version: '3'
+services:
+  backend:
+    build:
+      context: /home/srinath/Documents/git/frnds/suraj/python_backend_api
+      dockerfile: Dockerfile
+    container_name: sur-backend
+    image: sur-backend
+    ports:
+      - "8000:8000"
+    networks:
+      - frontend_backend_connection
+
+  frontend:
+    build:
+      context: /home/srinath/Documents/git/frnds/suraj/thesis_xai_frontend
+      dockerfile: Dockerfile.ui
+    container_name: sur-frontend
+    image: sur-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      - frontend_backend_connection
+    volumes:
+      - "./:/app"
+      - "sur_node_vol:/app/node_modules"
+
+networks:
+  frontend_backend_connection:
+volumes:
+  sur_node_vol:
