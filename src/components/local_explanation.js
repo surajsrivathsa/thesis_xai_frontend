@@ -88,7 +88,7 @@ function LinechartApp(props) {
       y: {
         title: {
           display: true,
-          text: "Panel Count",
+          text: "Story Pace",
           font: {
             size: 18, // adjust as needed
           },
@@ -279,17 +279,31 @@ function StoryPaceExplanation(props) {
   return (
     <div className="local-explanation">
       <h3>Story Pace Comparision</h3>
-      {
-        (Math.floor(Math.random() * 10) % 2 === 1) ? (
-          <Line
-            data={new_state.data}
-            width={null}
-            height={null}
-            options={options}
-            className="local-explanation"
-          />
-        ): (
-          <>
+      {Math.floor(Math.random() * 10) % 2 === 1 ? (
+        <Line
+          data={new_state.data}
+          width={null}
+          height={null}
+          options={options}
+          className="local-explanation"
+        />
+      ) : (
+        <Line
+          data={new_state.data}
+          width={null}
+          height={null}
+          options={options}
+          className="local-explanation"
+        />
+      )}
+    </div>
+  );
+}
+
+export { FacetKeywordsComp, LinechartApp, StoryPaceExplanation };
+
+/*
+<>
             <TableContainer component={Paper}>
               <Table aria-label="simple table">
                 <TableHead>
@@ -315,7 +329,7 @@ function StoryPaceExplanation(props) {
                 </TableBody>
               </Table>
             </TableContainer>
-            {/* <CardGrid
+            { <CardGrid
               pagecount={query_book_pages}
               story_pace={panel_ratio_query_book}
               pagecount_str="Query Book Page Count"
@@ -326,12 +340,6 @@ function StoryPaceExplanation(props) {
                 story_pace={panel_ratio_interested_book}
                 pagecount_str="Interested Book Page Count"
                 story_pace_str="Interested Book Story Pace"
-                color_str="rgb(53, 162, 235)" /> */}
+                color_str="rgb(53, 162, 235)" /> }
           </>
-        )
-      }
-    </div>
-  );
-}
-
-export { FacetKeywordsComp, LinechartApp, StoryPaceExplanation };
+*/
