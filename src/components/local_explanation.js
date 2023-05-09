@@ -79,7 +79,7 @@ function LinechartApp(props) {
       y: {
         title: {
           display: true,
-          text: "Panel Count",
+          text: "Story Pace",
           font: {
             size: 18, // adjust as needed
           },
@@ -284,6 +284,25 @@ function StoryPaceExplanation(props) {
     return (
       <div className="local-explanation">
         <h3>Story Pace Comparision</h3>
+        <Line
+          data={new_state.data}
+          width={null}
+          height={null}
+          options={options}
+          className="local-explanation"
+        />
+      </div>
+    );
+  }
+}
+
+export { FacetKeywordsComp, LinechartApp, StoryPaceExplanation };
+
+/*
+else {
+    return (
+      <div className="local-explanation">
+        <h3>Story Pace Comparision</h3>
         <CardGrid
           pagecount={query_book_pages}
           story_pace={panel_ratio_query_book}
@@ -301,6 +320,4 @@ function StoryPaceExplanation(props) {
       </div>
     );
   }
-}
-
-export { FacetKeywordsComp, LinechartApp, StoryPaceExplanation };
+*/

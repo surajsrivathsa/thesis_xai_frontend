@@ -74,9 +74,7 @@ const subCategoriesWithLists = [
   "occupations",
 ];
 function ChipsList({ list }) {
-  return (
-    <div>{list && list.map((item) => <Chip key={item} label={item} />)}</div>
-  );
+  return <div>{list && list.map((val) => <Chip key={val} label={val} />)}</div>;
 }
 
 const CompareBooks = ({ data }) => {
@@ -105,9 +103,9 @@ const CompareBooks = ({ data }) => {
     console.log("category: ", category);
     console.log("subcategory: ", subCategory);
     if (subCategory && subCategoriesWithLists.includes(subCategory) && item) {
-      console.log("detected list: ", item);
-      console.log("chips outout: ", ChipsList(item));
-      return ChipsList(item);
+      console.log("detected list: ", item.category);
+      console.log("chips outout: ", ChipsList(item[subCategory]));
+      return item[subCategory].join(", "); // ChipsList(item[subCategory])
     } else if (subCategory && !subCategoriesWithLists.includes(subCategory)) {
       return item[subCategory] || "-";
     }
